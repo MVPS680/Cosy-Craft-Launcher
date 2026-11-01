@@ -61,13 +61,13 @@ Public Class MyComboBox
     End Sub
 
     '指向动画
-    Public Sub RefreshColor() Handles Me.IsEnabledChanged, Me.MouseEnter, Me.MouseLeave, Me.PreviewMouseLeftButtonDown, Me.PreviewMouseLeftButtonUp, Me.GotKeyboardFocus
+    Public Sub RefreshColor() Handles Me.Loaded, Me.IsEnabledChanged, Me.MouseEnter, Me.MouseLeave, Me.PreviewMouseLeftButtonDown, Me.PreviewMouseLeftButtonUp, Me.GotKeyboardFocus, Me.LostKeyboardFocus, Me.DropDownOpened, Me.DropDownClosed
         '判断当前颜色
         Dim ForeColorName As String
         Dim BackColorName As String
         Dim Time As Integer
         If IsEnabled Then
-            If IsMouseDown OrElse IsDropDownOpen OrElse (IsEditable AndAlso Template.FindName("PART_EditableTextBox", Me).IsFocused) Then
+            If IsMouseDown OrElse IsDropDownOpen OrElse IsKeyboardFocusWithin Then
                 ForeColorName = "ColorBrush3"
                 BackColorName = "ColorBrushSurface"
                 Time = 10
@@ -89,13 +89,13 @@ Public Class MyComboBox
         If IsLoaded AndAlso AniControlEnabled = 0 Then '防止默认属性变更触发动画
             '有动画
             AniStart({
-                     AaColor(Me, ForegroundProperty, ForeColorName, Time),
+                     AaColor(Me, BorderBrushProperty, ForeColorName, Time),
                      AaColor(Me, BackgroundProperty, BackColorName, Time)
                  }, "MyComboBox Color " & Uuid)
         Else
             '无动画
             AniStop("MyComboBox Color " & Uuid)
-            SetResourceReference(ForegroundProperty, ForeColorName)
+            SetResourceReference(BorderBrushProperty, ForeColorName)
             SetResourceReference(BackgroundProperty, BackColorName)
         End If
     End Sub

@@ -1,83 +1,93 @@
-# PCL Restored · Minecraft downloads are back
+﻿# Plain Craft Launcher (PCL) · MY-PCL Restored
 
-> Official PCL stopped offering Minecraft downloads starting with 2.99.0.0. **This repository only does one thing: turns them back on.**
-> Rebuilt from the official 2.99.0.0 source. Unofficial build, not affiliated with the original project; everything else behaves like the official launcher.
+**A community-maintained Windows launcher for Minecraft: Java Edition, restoring game downloads and installation with version, mod and modpack management.**
 
-[![Latest release](https://img.shields.io/github/v/release/FLandreyu/MY-PCL?label=latest&color=1F6FEB)](https://github.com/FLandreyu/MY-PCL/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/FLandreyu/MY-PCL/total?color=3FB950)](https://github.com/FLandreyu/MY-PCL/releases)
-[![中文说明](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-README.md-8250df)](README.md)
+Independently maintained from the public [PCL 2.99.0.0](https://github.com/Meloong-Git/PCL) source. This is an unofficial distribution, not affiliated with the PCL team, Mojang or Microsoft.
 
-![PCL download page](docs/preview.png)
+[![Release](https://img.shields.io/github/v/release/FLandreyu/MY-PCL?color=5865a8)](https://github.com/FLandreyu/MY-PCL/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/FLandreyu/MY-PCL/total?color=438870)](https://github.com/FLandreyu/MY-PCL/releases)
+[![Windows](https://img.shields.io/badge/Platform-Windows-507aa0)](https://github.com/FLandreyu/MY-PCL/releases/latest)
 
-## Download & run
+[Download](https://github.com/FLandreyu/MY-PCL/releases/latest) · [Report an issue](https://github.com/FLandreyu/MY-PCL/issues/new/choose) · [Build instructions](docs/BUILD.md) · [中文](README.md)
 
-1. Grab `PCL-2.99.0.0-fix-win.zip` from [Releases](https://github.com/FLandreyu/MY-PCL/releases/latest);
-2. Extract anywhere (portable, no installer) and run `Plain Craft Launcher 2.exe`;
-3. Open the **下载 (Download)** page and install game versions, mod loaders and modpacks.
+## Get started
 
-> Windows SmartScreen may warn about an unknown publisher — the exe is not code-signed. Click **More info → Run anyway**.
+1. Download **`MY-PCL-…-win.zip`** from the latest Release's Assets. The automatically generated `Source code` archives are not runnable builds.
+2. Extract the entire ZIP into a separate, writable folder. Run **`Plain Craft Launcher 2.exe`**, keeping its `.exe.config` alongside it.
+3. Open **下载 (Download)**, select a game version and compatible loaders, or import a supported modpack.
+4. Select the installed version and configure Java and your account before launching. See the Microsoft login requirements below.
 
-## What works
+Requires a Windows desktop environment, .NET Framework 4.8, and Java suitable for your selected Minecraft version. Available components depend on game version and upstream services.
 
-| Feature | Status |
-| --- | --- |
-| Download Minecraft releases / snapshots / ancient versions | ✅ |
-| Install Forge, NeoForge, Fabric, LiteLoader, OptiFine | ✅ recommended versions in one click |
-| Download and install modpacks (`.zip` / `.mrpack`, or drag & drop) | ✅ CurseForge and Modrinth packs |
-| Edit installed instances (add/remove loaders, update components) | ✅ |
-| Offline / third-party (authlib-injector) login | ✅ |
-| Microsoft (premium) login | ⚠️ needs your own Mojang-allowlisted Entra app, see below |
-| Resource search (mods / modpacks) | ✅ **Modrinth works out of the box**, no setup; CurseForge needs your own API key (see [FAQ](#faq)) |
-| Auto-update | ❌ stripped from the open-source build, watch Releases instead |
+The executable is unsigned. Verify the download source and published SHA-256 before running it; do not run replacement files from unknown sources.
 
-> For resource search, just use **Modrinth** — no API key, no configuration. CurseForge search is an optional extra.
+## Features and requirements
 
-## Running alongside the official launcher
+| Use case | Capability | Notes |
+| --- | --- | --- |
+| Game installation | Releases, snapshots and historical versions | Restored download entries; requires available download sources |
+| Mod loaders | Forge, NeoForge, Fabric and other supported components | Options depend on game version and compatibility |
+| Modpacks | Supported `.zip` and `.mrpack` imports, including drag and drop | Not every ZIP is a modpack; individual downloads may have restrictions |
+| Instance management | Directories, Java, memory and launch arguments | Instance isolation is recommended for separate modpacks |
+| Resource discovery | Modrinth and CurseForge entries | Modrinth needs no user-provided key; CurseForge requires an API key |
+| Accounts | Microsoft, third-party authentication and offline-mode entries | Offline mode does not provide an authenticated Minecraft session |
+| Updates | Manual downloads from Releases | No built-in automatic update service |
 
-Settings live in different registry keys (`HKCU\Software\PCLDebug` vs `HKCU\Software\PCL`), so both builds can coexist on one machine and share the same `.minecraft`. A common setup: official PCL for premium login and launching, this build for downloading versions and modpacks.
+This describes project capabilities, not a guarantee that every version, modpack and network combination has been tested. Read each release's limitations and build information.
 
-## Microsoft login (optional)
+## Updating and existing installations
 
-This repository, like the official source, ships **without a Microsoft OAuth client ID** (the official build injects one via CI secrets), so a self-built copy fails with `AADSTS900144: client_id`. To make it work you need your own Entra app approved by Mojang:
+Exit the launcher and back up important saves and configuration before updating. Extract the new build into a separate folder and check it before moving configuration.
 
-1. Register an app in the [Microsoft Entra admin center](https://entra.microsoft.com): account type *Accounts in any organizational directory and personal Microsoft accounts*, enable *Allow public client flows*;
-2. Copy the *Application (client) ID* and set `PCL_MS_CLIENT_ID=<your id>` before launching (or bake it into `ModSecret.vb` and rebuild);
-3. Apply for the allowlist via the [official AppID form](https://help.minecraft.net/hc/en-us/articles/16254801392141) — **login cannot complete before approval**;
-4. Once approved, the same client ID works for every user of your build.
+Game files live in your chosen game directory. Launcher data also uses the local `PCL` folder and, for some settings and account caches, `HKCU\Software\PCLDebug`. Other launchers can use an existing game directory, but account caches are not interchangeable. Avoid simultaneous installation or modification of the same instance by multiple launchers.
 
-If login reaches 55% and fails with `403 Invalid app registration`, the account authorization already succeeded and only the app is unapproved — nothing to do with your network, IP or VPN. This build shows a dedicated message for that case.
+## Microsoft login
 
-## What changed
+**Public builds currently do not include an approved Microsoft OAuth Client ID ready for general use.** Submitting an application is not approval; this release does not change that requirement.
 
-Only three things; the download engine, UI and launch logic are untouched:
+If you maintain an application with the necessary Minecraft service access approval, set its ID before starting the launcher:
 
-- `Plain Craft Launcher 2/Modules/ModSecret.vb`: `RestrictMcDownload` flipped from `True` to `False`, restoring the download entries;
-- `Plain Craft Launcher 2/FormMain.xaml.vb`: two "download removed" changelog lines deleted;
-- `Plain Craft Launcher 2/Modules/Minecraft/ModLaunch.vb`: a 403 from the login API now distinguishes "app not allowlisted" from a real network error.
+```powershell
+$env:PCL_MS_CLIENT_ID = "your-application-client-id"
+& ".\Plain Craft Launcher 2.exe"
+```
 
-## FAQ
+This affects the current PowerShell session and processes it starts. A Client ID identifies an application; it is not a client secret. Public desktop clients must not embed a client secret. Do not borrow another launcher's ID or share account tokens.
 
-### CurseForge search returns nothing, modpack install stalls at "获取 Mod 下载信息"
+- Missing `client_id`: check that the environment variable reaches the launcher process.
+- `Invalid app registration`: check application registration and Minecraft service access approval.
+- Other HTTP 403 errors, timeouts or connection failures require the actual endpoint and error text; a status code alone does not identify the cause.
 
-Check the error first. A `403` from `api.curseforge.com` with an empty body and `X-Cache: Error from cloudfront` means the request was rejected at the CDN edge — **not an API-key problem**:
+You may continue launching existing games with a launcher whose account login works, while using this project for installation and management. A valid Minecraft license must be obtained separately.
 
-1. Make sure the current network can open <https://www.curseforge.com>; corporate/campus networks or ISPs may block it;
-2. If you use a proxy: CurseForge API terms §3.1(e) prohibit concealing your location through a proxy/VPN when calling the API — judge that risk yourself;
-3. Not worth the trouble? Use the Modrinth platform, which needs no key at all.
+## Resource services
 
-### Where do I get a CurseForge API key for online search?
+Modrinth search needs no user-provided API key. To use CurseForge services, obtain suitable API access from the provider and set:
 
-**Most users don't need one.** Search and install from Modrinth first — it needs no setup at all. The steps below are only for people who specifically want CurseForge content.
+```powershell
+$env:PCL_CURSEFORGE_API_KEY = "your-api-key"
+& ".\Plain Craft Launcher 2.exe"
+```
 
-1. Sign in to <https://console.curseforge.com> with a CurseForge account and submit the API application following the [official instructions](https://support.curseforge.com/support/solutions/articles/9000208346); review is manual and usually takes days to weeks;
-2. Once approved you get a key on the same page (60 characters, starting with `$2a$10$`);
-3. Set the environment variable `PCL_CURSEFORGE_API_KEY=<your key>`, restart PCL, and CurseForge search under *Community Resources* will work.
+No CurseForge API key is bundled. Follow the provider's applicable terms and never publish keys in source, screenshots or issues. Modpack installation also depends on author permissions, file availability and service status.
 
-> Keys are personal: CurseForge terms §2.2 forbid sharing, reselling, or embedding them in publicly distributed programs. This repository ships no key — please never commit one or paste it into an issue.
+## Troubleshooting
 
-## License & notice
+- **Empty lists or stalled downloads:** record the game version, loader, source, failed file and complete error. Check service availability and, where applicable, API access.
+- **Downloaded but cannot launch:** check Java, memory, mod compatibility and account status. Download completion does not prove launch readiness.
+- **Version still says 2.99.0.0:** that is the upstream base. Release suffixes such as `r2` identify this repository's maintenance revisions. `BUILD.json` in the ZIP records the source commit and configuration.
+- **Verify a ZIP:** download its `.sha256` from the same Release and compare it with `Get-FileHash .\MY-PCL-2.99.0.0-r2-win.zip -Algorithm SHA256`. A checksum detects differences; it does not replace a signature or trusted source.
 
-- Based on [PCL](https://github.com/Meloong-Git/PCL) 2.99.0.0 by 龙腾猫跃 (LTCat); **unofficial release**, not affiliated with the original author;
-- Second-party work under the *PCL Repository Fair Use Guidelines*: original attribution and sponsor links kept, original [LICENCE](LICENCE) retained, full source published;
-- For users who own Minecraft: Java Edition only. Do not use it to bypass ownership checks, sell it, or impersonate the official build;
-- Provided as-is, without warranty. See [TERMS.md](TERMS.md) and [PRIVACY.md](PRIVACY.md).
+## Feedback and development
+
+Use [this repository's issue tracker](https://github.com/FLandreyu/MY-PCL/issues/new/choose), including the release, Windows/Java versions, steps to reproduce and actual error. Redact tokens, passwords, API keys and personal information from logs. Do not upload account caches or registry exports.
+
+See [docs/BUILD.md](docs/BUILD.md) for dependencies, compilation and release packaging.
+
+## Credits and license
+
+Thanks to LTCat (龙腾猫跃), [PCL](https://github.com/Meloong-Git/PCL), [MeloongCore](https://github.com/Meloong-Git/MeloongCore) and their contributors. The original [LICENCE](LICENCE) is retained; consult it for usage and distribution conditions.
+
+This independent derivative is not an official PCL or Minecraft product. Minecraft and third-party content belong to their respective rights holders.
+
+[Privacy policy](PRIVACY.md) · [Terms](TERMS.md) · [Upstream repository](https://github.com/Meloong-Git/PCL) · [PCL help](https://github.com/LTCatt/PCL2Help)

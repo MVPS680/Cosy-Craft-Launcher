@@ -41,14 +41,14 @@ Friend Module ModSecret
 
 #Region "主题"
 
-    Public Color1 As New MyColor(67, 48, 50)
-    Public Color2 As New MyColor(184, 20, 34)
-    Public Color3 As New MyColor(230, 31, 48)
-    Public Color4 As New MyColor(235, 72, 85)
-    Public Color5 As New MyColor(244, 157, 165)
-    Public Color6 As New MyColor(250, 214, 217)
-    Public Color7 As New MyColor(253, 235, 236)
-    Public Color8 As New MyColor(254, 243, 244)
+    Public Color1 As New MyColor(56,46,66)
+    Public Color2 As New MyColor(150,61,99)
+    Public Color3 As New MyColor(175,82,118)
+    Public Color4 As New MyColor(189,120,148)
+    Public Color5 As New MyColor(213,165,186)
+    Public Color6 As New MyColor(234,211,224)
+    Public Color7 As New MyColor(243,232,240)
+    Public Color8 As New MyColor(249,243,247)
     Public ColorBg0 As New MyColor(225, 125, 133)
     Public ColorBg1 As New MyColor(190, Color7)
     Public ColorGray1 As New MyColor(64, 64, 64)
@@ -62,8 +62,8 @@ Friend Module ModSecret
     Public ColorSemiTransparent As New MyColor(1, Color8)
 
     Public ThemeNow As Integer = -1
-    ' 芙兰朵露主题：绯红主色 + 顶部条由玫瑰红向猩红偏移
-    Public ColorHue As Integer = 355, ColorSat As Integer = 80, ColorLightAdjust As Integer = -10, ColorHueTopbarDelta As OneOf(Of Integer, Integer()) = New Integer() {-12, 0, 8}
+    ' 红魔馆双生主题：绯红交互色，月夜紫与暖红装饰背景
+    Public ColorHue As Integer = 355, ColorSat As Integer = 80, ColorLightAdjust As Integer = -10, ColorHueTopbarDelta As OneOf(Of Integer, Integer()) = New Integer() {-9, 0, -3}
     Public ThemeDontClick As Integer = 0
 
     Public Sub ThemeRefresh(Optional NewTheme As Integer = -1)
@@ -71,20 +71,21 @@ Friend Module ModSecret
             If ThemeNow = NewTheme AndAlso NewTheme >= 0 Then Return
             If NewTheme >= 0 Then ThemeNow = NewTheme
 
-            Color1 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.2, 25 + ColorLightAdjust * 0.3)
-            Color2 = New MyColor().FromHSL2(ColorHue, ColorSat, 45 + ColorLightAdjust)
-            Color3 = New MyColor().FromHSL2(ColorHue, ColorSat, 55 + ColorLightAdjust)
-            Color4 = New MyColor().FromHSL2(ColorHue, ColorSat, 65 + ColorLightAdjust)
-            Color5 = New MyColor().FromHSL2(ColorHue, ColorSat, 80 + ColorLightAdjust * 0.4)
-            Color6 = New MyColor().FromHSL2(ColorHue, ColorSat, 91 + ColorLightAdjust * 0.1)
-            Color7 = New MyColor().FromHSL2(ColorHue, ColorSat, 95)
-            Color8 = New MyColor().FromHSL2(ColorHue, ColorSat, 97)
+            Color1 = New MyColor(56,46,66)
+            Color2 = New MyColor(150,61,99)
+            Color3 = New MyColor(175,82,118)
+            Color4 = New MyColor(189,120,148)
+            Color5 = New MyColor(213,165,186)
+            Color6 = New MyColor(234,211,224)
+            Color7 = New MyColor(243,232,240)
+            Color8 = New MyColor(249,243,247)
             ColorBg0 = Color4 * 0.4 + Color5 * 0.4 + ColorGray4 * 0.2
             ColorBg1 = New MyColor(190, Color7)
 
             ColorSemiTransparent = New MyColor(1, Color8)
             Application.Current.Resources("ColorBrush1") = New SolidColorBrush(Color1)
             Application.Current.Resources("ColorBrush2") = New SolidColorBrush(Color2)
+            Application.Current.Resources("ColorBrushPrimaryHover") = New SolidColorBrush(Color2 * 0.6 + Color3 * 0.4)
             Application.Current.Resources("ColorBrush3") = New SolidColorBrush(Color3)
             Application.Current.Resources("ColorBrush4") = New SolidColorBrush(Color4)
             Application.Current.Resources("ColorBrush5") = New SolidColorBrush(Color5)
@@ -111,22 +112,23 @@ Friend Module ModSecret
     Public Sub ThemeRefreshMain()
         RunInUi(
         Sub()
-            If Not FrmMain.IsLoaded Then Return
+            If FrmMain Is Nothing OrElse Not FrmMain.IsLoaded Then Return
             '顶部条背景
             Dim Brush = New LinearGradientBrush With {.EndPoint = New Point(1, 0), .StartPoint = New Point(0, 0)}
             Dim Deltas = ColorHueTopbarDelta.Switch(Function(d) New Integer() {-d, 0, d}, Function(d) d)
-            Brush.GradientStops.Add(New GradientStop With {.Offset = -0.05, .Color = New MyColor().FromHSL2(ColorHue + Deltas(0), ColorSat * 0.98, 44 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.32, .Color = New MyColor().FromHSL2(ColorHue + Deltas(1), ColorSat, 53 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.72, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat, 49 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 1.05, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.95, 42 + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = -0.05, .Color = New MyColor().FromHSL2(ColorHue + Deltas(0), ColorSat * 0.8, 39 + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.32, .Color = New MyColor().FromHSL2(ColorHue + Deltas(1), ColorSat * 0.9, 48 + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.72, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.8, 44 + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 1.05, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.75, 38 + ColorLightAdjust)})
             FrmMain.PanTitle.Background = Brush
             FrmMain.PanTitle.Background.Freeze()
+            FrmMain.ScarletAmbient.Visibility = If(Settings.Get(Of Boolean)("UiBackgroundColorful"), Visibility.Visible, Visibility.Collapsed)
             '主页面背景
             If Settings.Get(Of Boolean)("UiBackgroundColorful") Then
                 Brush = New LinearGradientBrush With {.EndPoint = New Point(0.1, 1), .StartPoint = New Point(0.9, 0)}
-                Brush.GradientStops.Add(New GradientStop With {.Offset = -0.1, .Color = New MyColor().FromHSL2(ColorHue - 15, ColorSat * 0.8, 91)})
-                Brush.GradientStops.Add(New GradientStop With {.Offset = 0.4, .Color = New MyColor().FromHSL2(ColorHue, ColorSat * 0.8, 91)})
-                Brush.GradientStops.Add(New GradientStop With {.Offset = 1.1, .Color = New MyColor().FromHSL2(ColorHue + 15, ColorSat * 0.8, 91)})
+                Brush.GradientStops.Add(New GradientStop With {.Offset = -0.1, .Color = New MyColor().FromHSL2(ColorHue - 15, ColorSat * 0.12, 97)})
+                Brush.GradientStops.Add(New GradientStop With {.Offset = 0.4, .Color = New MyColor().FromHSL2(ColorHue, ColorSat * 0.15, 96.5)})
+                Brush.GradientStops.Add(New GradientStop With {.Offset = 1.1, .Color = New MyColor().FromHSL2(ColorHue + 15, ColorSat * 0.1, 97)})
                 FrmMain.PanForm.Background = Brush
             Else
                 FrmMain.PanForm.Background = New MyColor(245, 245, 245)

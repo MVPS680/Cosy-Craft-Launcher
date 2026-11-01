@@ -18,7 +18,7 @@
 | --- | --- | --- |
 | 微软 OAuth 刷新令牌 / 访问令牌 | 本机注册表 `HKEY_CURRENT_USER\Software\PCLDebug` | 免去每次启动重复登录 |
 | Minecraft 访问令牌、玩家名、UUID | 同上 | 启动游戏、验证正版所有权 |
-| 启动器设置、下载源、Java 路径等 | 同上 | 记住你的偏好 |
+| 启动器设置、下载源、Java 路径等 | 程序目录下的 `PCL` 配置文件、部分注册表项；版本独立配置位于相应游戏目录 | 记住你的偏好 |
 | 游戏版本、整合包、存档 | 你选择的 `.minecraft` 目录 | 启动游戏 |
 | 日志文件 | 程序目录下 `PCL\Log*.txt` | 排查问题，仅存本机 |
 
@@ -26,13 +26,13 @@
 
 ## 三、会连接哪些第三方服务
 
-仅在功能被使用时才会发起请求：
+以下功能会使用第三方服务。已有账号的令牌刷新、资源缓存或用户启用的自定义内容也可能触发请求：
 
-- **微软账号登录**：`login.microsoftonline.com`（设备码授权与令牌刷新）。只有你在启动器里主动点「正版登录」时才会访问。
+- **微软账号登录**：`login.microsoftonline.com`（设备码授权与令牌刷新）。
 - **Xbox Live**：`user.auth.xboxlive.com`、`xsts.auth.xboxlive.com`。
 - **Minecraft 服务**：`api.minecraftservices.com`（验证是否拥有 Java 版、获取皮肤等）。
 - **版本与资源下载**：Mojang 官方源、BMCLAPI 等镜像、整合包作者指定的地址。
-- **资源搜索**：Modrinth API；本构建没有内置 CurseForge API Key，因此 CurseForge 搜索不可用。
+- **资源搜索**：Modrinth API；配置自己的 `PCL_CURSEFORGE_API_KEY` 后也会访问 CurseForge API。本构建不附带该 Key。
 
 上述服务由各自运营方处理数据，适用其各自的隐私政策，与本项目无关。
 
@@ -48,4 +48,4 @@
 
 隐私政策如有变更会直接更新本文件并保留提交历史。问题请开 [GitHub Issue](https://github.com/FLandreyu/MY-PCL/issues)。
 
-最后更新：2026-10-20
+最后更新：2026-11-01

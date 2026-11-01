@@ -259,4 +259,13 @@ Public Class MyRadioButton
         End Try
     End Sub
 
+    Private Sub Radio_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If Not IsEnabled OrElse Not IsKeyboardFocused OrElse (e.Key <> Key.Space AndAlso e.Key <> Key.Enter) Then Return
+        e.Handled = True
+        If Checked OrElse e.IsRepeat Then Return
+        Dim Args As New RouteEventArgs(True)
+        RaiseEvent PreviewClick(Me, Args)
+        If Not Args.Handled Then SetChecked(True, True, True)
+    End Sub
+
 End Class

@@ -62,8 +62,18 @@
                     <TranslateTransform x:Name="AprilPosTrans" />
                 </TransformGroup>
             </Grid.RenderTransform>
-            <local:MyButton x:Name="BtnLaunch" Height="54" Margin="20,0" Text="正在加载" ColorType="Highlight" Padding="30,0,30,15" IsEnabled="False" />
-            <TextBlock x:Name="LabVersion" Text="正在加载版本列表，请稍候" Margin="35,0,35,10" IsHitTestVisible="False" VerticalAlignment="Bottom" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="11" Foreground="White" RenderTransformOrigin="0.5,-0.2">
+            <local:MyButton x:Name="BtnLaunch" Height="60" TextElement.FontSize="15" Margin="20,0" Text="正在加载" ColorType="Highlight" Padding="30,0,30,17" IsEnabled="False" />
+            <TextBlock x:Name="LabVersion" Text="正在加载版本列表，请稍候" Margin="35,0,35,10" IsHitTestVisible="False" VerticalAlignment="Bottom" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" FontSize="11" RenderTransformOrigin="0.5,-0.2">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource BasedOnTextBlock}">
+                        <Setter Property="Foreground" Value="{StaticResource ColorBrushOnAccent}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEnabled, ElementName=BtnLaunch}" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource ColorBrushTextTertiary}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
                 <TextBlock.RenderTransform>
                     <ScaleTransform ScaleX="{Binding RealRenderTransform.ScaleX, ElementName=BtnLaunch, Mode=OneWay}" ScaleY="{Binding RealRenderTransform.ScaleY, ElementName=BtnLaunch, Mode=OneWay}" />
                 </TextBlock.RenderTransform>

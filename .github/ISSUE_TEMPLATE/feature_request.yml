@@ -1,0 +1,17 @@
+﻿name: 改进建议 / Feature request
+description: 对此第三方版本提出改进建议
+title: "[建议] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 当前遇到的问题
+      description: 说明使用场景，以及现有功能哪里不方便。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 希望怎样改进
+    validations:
+      required: true

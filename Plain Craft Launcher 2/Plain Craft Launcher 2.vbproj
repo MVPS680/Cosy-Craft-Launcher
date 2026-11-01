@@ -196,6 +196,7 @@
     <Compile Include="Controls\Behaviors\LazyLoadBehavior.vb" />
     <Compile Include="Controls\MyComboBox.vb" />
     <Compile Include="Controls\MyComboBoxItem.vb" />
+    <Compile Include="Controls\ScarletBackdrop.vb" />
     <Compile Include="Controls\MyCard.vb" />
     <Compile Include="Controls\MyExtraTextButton.xaml.vb">
       <DependentUpon>MyExtraTextButton.xaml</DependentUpon>

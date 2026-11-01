@@ -84,8 +84,8 @@ Public Class MyButton
                     TextRes = If(IsMouseOver, "ColorBrush2", "ColorBrush1")
                 Case ColorState.Highlight
                     '主按钮：实心强调色，悬停时提亮
-                    BorderRes = If(IsMouseOver, "ColorBrush4", "ColorBrush3")
-                    BackRes = If(IsMouseOver, "ColorBrush4", "ColorBrush3")
+                    BorderRes = If(IsMouseOver, "ColorBrushPrimaryHover", "ColorBrush2")
+                    BackRes = BorderRes
                     TextRes = "ColorBrushOnAccent"
                 Case ColorState.Red
                     BorderRes = If(IsMouseOver, "ColorBrushRedLight", "ColorBrushRedBorder")
@@ -97,7 +97,7 @@ Public Class MyButton
                     BackRes = "ColorBrushGray7"
                     TextRes = "ColorBrushGray4"
             End Select
-            PanShine.Opacity = If(IsEnabled AndAlso ColorType = ColorState.Highlight, 0.9, 0)
+            PanShine.Opacity = If(IsEnabled AndAlso ColorType = ColorState.Highlight, 0.25, 0)
             AniResColor(PanFore, Border.BorderBrushProperty, BorderRes, "MyButton Border " & Uuid, If(IsMouseOver, AnimationColorIn, AnimationColorOut))
             AniResColor(PanFore, BackgroundProperty, BackRes, "MyButton Background " & Uuid, If(IsMouseOver, AnimationColorIn, AnimationColorOut))
             AniResColor(LabText, TextBlock.ForegroundProperty, TextRes, "MyButton Text " & Uuid, If(IsMouseOver, AnimationColorIn, AnimationColorOut))
@@ -129,21 +129,48 @@ Public Class MyButton
         IsMouseDown = True
         Focus()
         AniStart({
-                 AaScaleTransform(PanFore, 0.955 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 80,, New AniEaseOutFluent(AniEasePower.ExtraStrong)),
-                 AaScaleTransform(PanFore, -0.01, 700,, New AniEaseOutFluent(AniEasePower.Middle))
+                 AaScaleTransform(PanFore, 0.985 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 90,, New AniEaseOutFluent(AniEasePower.ExtraStrong))
                  }, "MyButton Scale " & Uuid)
     End Sub
     Private Sub Button_MouseUp() Handles Me.MouseLeftButtonUp
         If Not IsMouseDown Then Return
         IsMouseDown = False
         AniStart({
-               AaScaleTransform(PanFore, 1 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 300, 10, New AniEaseOutFluent(AniEasePower.Middle))
+               AaScaleTransform(PanFore, 1 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 180, 10, New AniEaseOutFluent(AniEasePower.Middle))
            }, "MyButton Scale " & Uuid)
     End Sub
     Private Sub Button_MouseLeave() Handles Me.MouseLeave
         If Not IsMouseDown Then Return
         IsMouseDown = False
-        AniStart(AaScaleTransform(PanFore, 1 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 800,, New AniEaseOutFluent(AniEasePower.Strong)), "MyButton Scale " & Uuid)
+        AniStart(AaScaleTransform(PanFore, 1 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 180,, New AniEaseOutFluent(AniEasePower.Strong)), "MyButton Scale " & Uuid)
+    End Sub
+
+    Private IsSpaceDown As Boolean
+    Private Sub Button_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If Not IsEnabled OrElse Not IsKeyboardFocused Then Return
+        If e.Key <> Key.Enter AndAlso e.Key <> Key.Space Then Return
+        e.Handled = True
+        If e.IsRepeat Then Return
+        If e.Key = Key.Space Then
+            IsSpaceDown = True
+        Else
+            ActivateFromKeyboard()
+        End If
+    End Sub
+    Private Sub Button_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+        If e.Key <> Key.Space Then Return
+        Dim ShouldActivate = IsSpaceDown AndAlso IsEnabled AndAlso IsKeyboardFocused
+        IsSpaceDown = False
+        e.Handled = True
+        If ShouldActivate Then ActivateFromKeyboard()
+    End Sub
+    Private Sub Button_LostKeyboardFocus() Handles Me.LostKeyboardFocus, Me.IsEnabledChanged
+        IsSpaceDown = False
+    End Sub
+    Private Sub ActivateFromKeyboard()
+        Dim Args As New MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) With {.RoutedEvent = MouseLeftButtonUpEvent}
+        RaiseEvent Click(Me, Args)
+        RaiseCustomEvent()
     End Sub
 
 End Class

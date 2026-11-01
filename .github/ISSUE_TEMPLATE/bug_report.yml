@@ -1,0 +1,34 @@
+name: 问题反馈 / Bug report
+description: 反馈此第三方版本的使用问题
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "请先查看 README 与对应 Release 的已知限制。不要提交密码、令牌、API Key 或账号缓存。"
+  - type: input
+    id: version
+    attributes:
+      label: Release 版本
+      placeholder: "2.99.0.0-r2"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      description: "Windows、Java、游戏版本、模组加载器或整合包版本。"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤与预期结果
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果与错误日志
+      description: "提供相关错误片段，先隐藏敏感信息与不希望公开的本地路径。"
+    validations:
+      required: true

@@ -1,116 +1,125 @@
-# PCL 修复版 · 重新开启 Minecraft 下载
+﻿# Plain Craft Launcher (PCL) · MY-PCL 修复版
 
-> **官方 PCL 从 2.99.0.0 起不再提供 Minecraft 下载功能，这个仓库只做一件事：把它打开。**
-> 基于官方 2.99.0.0 源码重新编译，非官方发布；除下载入口外，其余行为与官方一致。
+**面向 Windows 的 Minecraft: Java Edition 第三方启动器，恢复游戏下载与安装能力，方便管理版本、模组和整合包。**
 
-[![最新版本](https://img.shields.io/github/v/release/FLandreyu/MY-PCL?label=%E6%9C%80%E6%96%B0%E7%89%88&color=1F6FEB)](https://github.com/FLandreyu/MY-PCL/releases/latest)
-[![下载量](https://img.shields.io/github/downloads/FLandreyu/MY-PCL/total?label=%E4%B8%8B%E8%BD%BD&color=3FB950)](https://github.com/FLandreyu/MY-PCL/releases)
-[![使用条款](https://img.shields.io/badge/%E4%BD%BF%E7%94%A8%E6%9D%A1%E6%AC%BE-TERMS.md-8250df)](TERMS.md)
-[![隐私政策](https://img.shields.io/badge/%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96-PRIVACY.md-8250df)](PRIVACY.md)
-[![English](https://img.shields.io/badge/English-README.en.md-8250df)](README.en.md)
+基于 [PCL 2.99.0.0](https://github.com/Meloong-Git/PCL) 公开源码独立维护。非 PCL 官方发布，与 Mojang、Microsoft 无隶属关系。
 
-![PCL 修复版的下载页：可以正常浏览和安装 Minecraft 版本、模组加载器与整合包](docs/preview.png)
+[![最新正式版](https://img.shields.io/github/v/release/FLandreyu/MY-PCL?label=Release&color=5865a8)](https://github.com/FLandreyu/MY-PCL/releases/latest)
+[![累计下载](https://img.shields.io/github/downloads/FLandreyu/MY-PCL/total?label=Downloads&color=438870)](https://github.com/FLandreyu/MY-PCL/releases)
+[![平台](https://img.shields.io/badge/Platform-Windows-507aa0)](https://github.com/FLandreyu/MY-PCL/releases/latest)
 
-## 下载与使用
+[下载正式版](https://github.com/FLandreyu/MY-PCL/releases/latest) · [报告问题](https://github.com/FLandreyu/MY-PCL/issues/new/choose) · [构建说明](docs/BUILD.md) · [English](README.en.md)
 
-1. 到 [Releases](https://github.com/FLandreyu/MY-PCL/releases/latest) 下载 `PCL-2.99.0.0-fix-win.zip`；
-2. 解压到任意目录（免安装），双击 `Plain Craft Launcher 2.exe`；
-3. 打开「下载」页，安装游戏版本、模组加载器和整合包。
+## 快速开始
 
-> 首次运行如果弹出 Windows SmartScreen（未知发布者），点「更多信息 → 仍要运行」即可：程序没有做代码签名。
+1. 打开 [最新 Release](https://github.com/FLandreyu/MY-PCL/releases/latest)，下载 Assets 中的 **`MY-PCL-…-win.zip`**。`Source code` 是源码，不是可运行的启动器。
+2. 将压缩包完整解压到有写入权限的独立目录，运行 **`Plain Craft Launcher 2.exe`**，保留同目录下的 `.exe.config` 文件。
+3. 在「下载」中选择 Minecraft 版本，按需选择兼容的模组加载器；也可以导入支持的整合包。
+4. 安装完成后选择版本、配置账号和 Java，再启动游戏。微软登录的前置条件见下文。
 
-## 这个版本能做什么
+**运行环境：** Windows 桌面环境、.NET Framework 4.8，以及与所选游戏版本相匹配的 Java。可用组件与资源以实际列表为准。
 
-| 功能 | 状态 |
-| --- | --- |
-| 下载 Minecraft 正式版 / 快照 / 远古版本 | ✅ |
-| 安装 Forge、NeoForge、Fabric、LiteLoader、OptiFine | ✅ 可选推荐版本，一键安装 |
-| 下载并安装整合包（`.zip` / `.mrpack`，也可直接拖进启动器） | ✅ CurseForge、Modrinth 整合包都支持 |
-| 修改已安装版本（增删模组加载器、更新 Forge / Fabric 等组件） | ✅ |
-| 离线登录、第三方（authlib-injector）登录 | ✅ |
-| 正版（微软）登录 | ⚠️ 需自备已获 Mojang 白名单批准的 Entra 应用，见下 |
-| 资源搜索（模组 / 整合包） | ✅ **Modrinth 开箱即用**，零配置；CurseForge 需自备 API Key（见[常见问题](#常见问题)） |
-| 自动更新 | ❌ 开源版本不含更新模块，请关注 Releases |
+> 发行包未进行代码签名。遇到系统提示时，请先核对下载来源及 Release 提供的 SHA-256；不要运行来源不明的替换文件。
 
-> 资源搜索推荐直接用 **Modrinth**：不需要 API Key、不需要任何配置，下载完就能用。CurseForge 搜索属于可选增强。
+## 功能概览
 
-## 和官方版共存
+| 使用场景 | 提供的能力 | 说明 |
+| --- | --- | --- |
+| 安装游戏 | Minecraft 正式版、快照及历史版本下载 | 恢复相应下载入口，依赖下载源可用性 |
+| 配置模组环境 | Forge、NeoForge、Fabric 等组件安装 | 可选组件由游戏版本与兼容性决定 |
+| 使用整合包 | 支持的 `.zip`、`.mrpack` 整合包导入与安装 | 可将整合包拖入启动器；普通 ZIP 不一定是整合包 |
+| 管理版本 | 版本目录、Java、内存与启动参数配置 | 建议为不同整合包启用版本隔离 |
+| 查找资源 | Modrinth、CurseForge 资源入口 | Modrinth 无需自备 Key；CurseForge 需要配置 API Key |
+| 账号登录 | 微软账号、第三方认证与离线模式入口 | 离线模式不提供正版会话，不能替代正版授权 |
+| 维护更新 | 从 GitHub Releases 手动更新 | 当前没有内置自动更新服务 |
 
-修复版与官方 PCL 的设置分别存在 `HKCU\Software\PCLDebug` 和 `HKCU\Software\PCL`，可以同时装在一台电脑上、指向同一个 `.minecraft`，互不覆盖。
+功能列表说明项目能力，不代表所有游戏版本、整合包与网络环境都已逐一验证。具体构建信息和已知限制以对应 Release 为准。
 
-常见用法是：官方版负责正版登录与启动，修复版负责下载版本和整合包。
+## 更新、存档与共存
 
-## 正版登录（可选）
+- **更新前先退出启动器，备份重要存档和配置。** 将新版解压到独立目录确认可运行后，再迁移需要的配置。
+- 游戏文件保存在你选择的游戏目录；启动器目录内也有 `PCL` 配置与日志文件夹，部分数据使用 `HKCU\Software\PCLDebug`。
+- 可以与其他启动器分别安装，并按需选择已有游戏目录。不同启动器的账号缓存不通用，不能据此共享正版登录状态。
+- 不要让多个启动器并行安装或修改同一游戏版本，以免发生文件冲突。
 
-本仓库和官方源码一样**不含微软 OAuth 客户端 ID**（官方由 CI 注入密钥），所以自编译版本点「正版登录」会提示 `AADSTS900144: client_id` 缺失。要让它工作，需要自备一个已获 Mojang 白名单批准的 Entra 应用：
+## 微软账号登录
 
-1. 在 [Microsoft Entra 管理中心](https://entra.microsoft.com) 注册应用：账户类型选「任何组织目录中的账户和个人 Microsoft 帐户」，并开启「允许公共客户端流」；
-2. 复制「应用程序(客户端) ID」，启动前设置环境变量 `PCL_MS_CLIENT_ID=<你的 client id>`（或填写到 `ModSecret.vb` 后自行编译）；
-3. 通过 [Minecraft 官方 AppID 表单](https://help.minecraft.net/hc/en-us/articles/16254801392141) 申请白名单——**审核通过前登录无法完成**；
-4. 审核通过后即可正常登录。
+**当前公开构建未内置可直接使用的、已获批准的 Microsoft OAuth Client ID。** 提交应用申请不等于获得批准；本次发布不改变这一限制。
 
-进度到 55% 并提示 `403 Invalid app registration`，说明账号授权已经成功，只是这个应用还没被 Mojang 批准，与网络、IP、VPN 无关——本版对这个错误有单独提示。
+如果你维护自己的应用，需要使用获得所需 Minecraft 服务访问批准的应用 ID，并在启动程序前设置：
 
-## 改了什么
+```powershell
+$env:PCL_MS_CLIENT_ID = "你的应用程序客户端 ID"
+& ".\Plain Craft Launcher 2.exe"
+```
 
-只动了三处，下载引擎、界面和启动逻辑都没改：
+设置只影响当前 PowerShell 及它启动的程序。Client ID 是应用标识，**不是客户端密码**；桌面公共客户端不应内置 client secret。不要使用其他启动器的应用 ID，也不要分享登录令牌。
 
-- `Plain Craft Launcher 2/Modules/ModSecret.vb`：`RestrictMcDownload` 由 `True` 改为 `False`，重新打开下载入口；
-- `Plain Craft Launcher 2/FormMain.xaml.vb`：删掉 2.99 更新日志里两条「删除 MC 下载功能」的提示；
-- `Plain Craft Launcher 2/Modules/Minecraft/ModLaunch.vb`：正版登录返回 403 时区分「应用未过白名单」和「网络异常」，避免误报 IP 问题。
+- `client_id` 缺失：检查环境变量是否传给了启动器进程。
+- `Invalid app registration`：检查应用注册和 Minecraft 服务访问批准状态。
+- 其他 `403`、超时或连接失败：保留具体接口及错误文本后排查；不能仅凭状态码断定是账号、应用或网络问题。
 
-## 声明与许可
+如果当前配置无法完成微软登录，可继续使用能够正常登录的启动器启动已有游戏；本项目可以独立用于版本下载与管理。Minecraft 授权需由用户自行合法取得。
 
-- 本项目基于龙腾猫跃的 [PCL](https://github.com/Meloong-Git/PCL) 2.99.0.0 源码修改编译，**非官方发布**，与官方无关；
-- 依据《PCL 存储库合理使用指南》进行二次创作：保留关于页署名与赞助入口、沿用原许可文件 [LICENCE](LICENCE)、公开全部源代码；
-- 仅限已购买 Minecraft: Java Edition 的用户使用，请勿用于绕过正版验证、售卖或冒充官方版本；
-- 按原样提供，不对使用后果作任何担保。详见[使用条款](TERMS.md)与[隐私政策](PRIVACY.md)。
+## Modrinth 与 CurseForge
+
+Modrinth 资源搜索无需额外配置 API Key。CurseForge 相关服务需自行取得适用的 API 访问凭据，再在启动前设置：
+
+```powershell
+$env:PCL_CURSEFORGE_API_KEY = "你的 API Key"
+& ".\Plain Craft Launcher 2.exe"
+```
+
+本仓库与发行包不附带 CurseForge API Key。使用条件以服务提供方的要求为准；不要把 Key 写入公开源码、日志截图或 Issue。某些整合包还受作者下载权限、文件可用性和第三方服务状态影响。
 
 ## 常见问题
 
-### CurseForge 搜不出来，整合包卡在「获取 Mod 下载信息」？
-
-先看错误类型。如果请求 `api.curseforge.com` 返回 `403`、响应体为空、响应头带 `X-Cache: Error from cloudfront`，说明请求在 CDN 边缘就被拒了，**和 API Key 无关**：
-
-1. 确认当前网络能正常打开 <https://www.curseforge.com>；公司/校园网或运营商拦截时需要换网络；
-2. 使用代理时注意：CurseForge API 条款 3.1(e) 禁止用代理/VPN 掩盖地理位置访问 API，是否使用请自行权衡；
-3. 不想折腾就用 Modrinth 平台，不需要任何 Key。
-
-### 想用 CurseForge 在线搜索，Key 从哪来？
-
-**大多数用户不需要这个 Key。** 搜模组、装整合包优先用 Modrinth，完全零配置；下面步骤只给确实需要 CurseForge 内容索引的人。
-
-1. 用 CurseForge 账号登录 <https://console.curseforge.com>，按[官方说明](https://support.curseforge.com/support/solutions/articles/9000208346)提交 API 申请，人工审核通常需要几天到数周；
-2. 通过后在同一页面获取 API Key（60 个字符，`$2a$10$` 开头）；
-3. 设置环境变量 `PCL_CURSEFORGE_API_KEY=<你的 Key>`，重新启动 PCL，即可在「社区资源」里搜索 CurseForge。
-
-> Key 只能自己用：CurseForge 条款 2.2 禁止分享、转售或内置到公开分发的程序，所以本仓库不附带 Key，也请不要把它提交到仓库或贴进 Issue。
->
-> 为什么不能直接内置、以及申请「公开版内置 Key」书面许可的做法，见 [docs/overwolf-api-license-request.md](docs/overwolf-api-license-request.md)。
-
-## 反馈
-
-遇到问题欢迎开 [Issue](https://github.com/FLandreyu/MY-PCL/issues)，附上 PCL 的日志（设置 → 其他 → 日志）会更快定位。
-
 <details>
-<summary>维护者：同步上游更新</summary>
+<summary><strong>下载失败、列表为空或安装卡住怎么办？</strong></summary>
 
-上游每次发版后，用 `scripts/sync-upstream.sh` 同步并重编（Windows / Git Bash）：
-
-```bash
-scripts/sync-upstream.sh            # 只合并，冲突时打印需要保留的点
-scripts/sync-upstream.sh --build    # 合并 + 编译 + 打包 zip 到 ../dist
-scripts/sync-upstream.sh --publish  # 合并 + 编译 + 打包 + 打 tag + 更新 Release（需 GITHUB_TOKEN）
-```
-
-冲突时固定保留：`RestrictMcDownload = False`、删除的两条「删除 MC 下载」更新日志、`ModLaunch.vb` 的 403 白名单判断、本 README 的「正版登录」小节。
-
-`.github/workflows/fix-build.yml` 会在推送 `v*-fix` tag 时自动编译并更新 Release，也可以手动运行只取 artifact。
+记录游戏版本、加载器、下载源、失败文件和完整错误文本。先确认对应服务可以访问，再尝试重新加载或切换可用下载源。CurseForge 请求失败还需要检查 API Key 和内容访问权限；单个 HTTP 状态码不足以确定原因。
 
 </details>
 
-## 相关资源
+<details>
+<summary><strong>已经下载了游戏，为什么仍然无法启动？</strong></summary>
 
-- [PCL 下载](https://meloong.com/pcl)：官方正式版
-- [PCL 帮助文档库](https://github.com/LTCatt/PCL2Help)
-- [PCL 功能投票](https://github.com/Meloong-Git/PCL/discussions/2)
+下载完成与启动成功是两个阶段。请检查 Java 版本、内存设置、模组兼容性和账号状态。第三方认证服务器的可用性由其运营方负责；离线模式不能用于需要正版会话的服务器。
+
+</details>
+
+<details>
+<summary><strong>为什么程序中仍显示 2.99.0.0？</strong></summary>
+
+2.99.0.0 是本项目采用的上游基础版本。Release 名称中的 `r2` 等后缀区分本仓库的维护批次，不代表 PCL 官方的新版本。压缩包中的 `BUILD.json` 记录对应源码提交和构建配置。
+
+</details>
+
+<details>
+<summary><strong>怎样核对下载文件？</strong></summary>
+
+从同一 Release 下载 ZIP 与 `.sha256` 文件，在 PowerShell 中执行：
+
+```powershell
+Get-FileHash ".\MY-PCL-2.99.0.0-r2-win.zip" -Algorithm SHA256
+```
+
+将输出与校验文件比较。校验值用于发现文件损坏或不一致，不代替代码签名或可信下载来源。
+
+</details>
+
+## 反馈与贡献
+
+请在[本仓库 Issues](https://github.com/FLandreyu/MY-PCL/issues/new/choose)反馈此修改版的问题，附上：Release 版本、Windows 与 Java 版本、复现步骤、预期结果和实际错误。
+
+日志中可能包含用户名、本地路径、服务器地址或凭据。提交前请隐藏令牌、密码、API Key 等敏感内容。不要上传整个账号缓存或注册表导出文件。
+
+源码构建、依赖与发布方式见 [构建说明](docs/BUILD.md)。欢迎提交可复现的问题与范围明确的改进。
+
+## 来源与许可
+
+感谢龙腾猫跃（LTCat）及 [PCL](https://github.com/Meloong-Git/PCL)、[MeloongCore](https://github.com/Meloong-Git/MeloongCore) 的贡献者。本项目保留上游 [LICENCE](LICENCE)，具体使用与分发条件请阅读原文。
+
+本项目为第三方独立修改版，不是 PCL、Minecraft、Mojang 或 Microsoft 的官方产品。Minecraft 及第三方资源的权利归各自权利人所有。
+
+[隐私政策](PRIVACY.md) · [使用条款](TERMS.md) · [PCL 官方仓库](https://github.com/Meloong-Git/PCL) · [PCL 帮助文档](https://github.com/LTCatt/PCL2Help)

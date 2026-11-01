@@ -1,0 +1,65 @@
+name: Publish maintenance release
+
+on:
+  push:
+    branches: [main]
+    paths: [release.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: maintenance-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'FLandreyu/MY-PCL' && github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - uses: microsoft/setup-msbuild@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore dependencies
+        run: dotnet restore PCLCS/PCLCS.csproj
+      - name: Build Release
+        shell: pwsh
+        run: |
+          $sdkVersion = dotnet --version
+          $env:MSBuildSDKsPath = Join-Path $env:ProgramFiles "dotnet/sdk/$sdkVersion/Sdks"
+          $env:MSBuildEnableWorkloadResolver = 'false'
+          msbuild "Plain Craft Launcher 2/Plain Craft Launcher 2.vbproj" -p:Configuration=Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Check release tooling
+        run: python -m unittest discover -s scripts -p "test_*.py"
+      - name: Check desktop controls and runtime
+        shell: pwsh
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_ui.ps1 -Exe "Plain Craft Launcher 2/bin/Plain Craft Launcher 2.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_scarlet_theme.ps1 -Exe "Plain Craft Launcher 2/bin/Plain Craft Launcher 2.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Package and preflight
+        shell: pwsh
+        run: |
+          python scripts/package_release.py --build-dir "Plain Craft Launcher 2/bin" --output-dir dist
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/publish_release.py --directory dist
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-release
+          path: dist/*
+      - name: Upload, verify and publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/publish_release.py --directory dist --execute

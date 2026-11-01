@@ -64,10 +64,11 @@ Public Class MyCard
     'UI 建立
     Public Sub New()
         MainChrome = New MyDropShadow With {
-            .Margin = New Thickness(-7, -7, -7, -7 - GetWPFSize(1)), .ShadowRadius = 6, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(8)}
+            .Margin = New Thickness(-8, -8, -8, -10), .ShadowRadius = 8, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(14)}
         MainChrome.SetResourceReference(MyDropShadow.ColorProperty, "ColorObject1")
         Children.Insert(0, MainChrome)
-        MainBorder = New Border With {.Background = New SolidColorBrush(Color.FromArgb(250, 255, 255, 255)), .CornerRadius = New CornerRadius(8), .IsHitTestVisible = False, .BorderThickness = New Thickness(1)}
+        MainBorder = New Border With {.CornerRadius = New CornerRadius(14), .IsHitTestVisible = False, .BorderThickness = New Thickness(1)}
+        MainBorder.SetResourceReference(Border.BackgroundProperty, "ColorBrushCardSurface")
         MainBorder.SetResourceReference(Border.BorderBrushProperty, "ColorBrushCardBorder")
         Children.Insert(1, MainBorder)
         MainGrid = New Grid
@@ -79,7 +80,7 @@ Public Class MyCard
         IsLoad = True
         '初次加载限定
         If MainTextBlock Is Nothing Then
-            MainTextBlock = New TextBlock With {.HorizontalAlignment = HorizontalAlignment.Left, .VerticalAlignment = VerticalAlignment.Top, .Margin = New Thickness(15, 12, 0, 0), .FontWeight = FontWeights.Bold, .FontSize = 13, .IsHitTestVisible = False}
+            MainTextBlock = New TextBlock With {.HorizontalAlignment = HorizontalAlignment.Left, .VerticalAlignment = VerticalAlignment.Top, .Margin = New Thickness(18, 12, 36, 0), .FontWeight = FontWeights.SemiBold, .FontSize = 13, .IsHitTestVisible = False}
             MainTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "ColorBrush1")
             MainTextBlock.SetBinding(TextBlock.TextProperty, New Binding("Title") With {.Source = Me, .Mode = BindingMode.OneWay})
             MainGrid.Children.Add(MainTextBlock)
@@ -136,8 +137,8 @@ Public Class MyCard
     End Sub
 
     '动画
-    Private Const DropShadowIdleOpacity As Double = 0.10
-    Private Const DropShadowHoverOpacity As Double = 0.4
+    Private Const DropShadowIdleOpacity As Double = 0.025
+    Private Const DropShadowHoverOpacity As Double = 0.12
     Public Property HasMouseAnimation As Boolean = True
     Private Sub MyCard_MouseEnter(sender As Object, e As MouseEventArgs) Handles Me.MouseEnter
         If Not HasMouseAnimation Then Return

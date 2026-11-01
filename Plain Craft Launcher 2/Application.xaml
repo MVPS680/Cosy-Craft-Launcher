@@ -18,25 +18,25 @@
             <corewpf:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-            <!-- 颜色表：芙兰朵露·绯红主题 -->
-            <SolidColorBrush x:Key="ColorBrush1">#433032</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush2">#B81422</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush3">#E61F30</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush4">#EB4855</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush5">#F49DA5</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush6">#FAD6D9</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush7">#FDEBEC</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrush8">#FEF3F4</SolidColorBrush>
+            <!-- 双生主题：莓红交互、雾紫层次与暖白表面 -->
+            <SolidColorBrush x:Key="ColorBrush1">#382E42</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush2">#963D63</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush3">#AF5276</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush4">#BD7894</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush5">#D5A5BA</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush6">#EAD3E0</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush7">#F3E8F0</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrush8">#F9F3F7</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrushBg0">#E17D85</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrushBg1">#BEFDEBEC</SolidColorBrush>
-            <Color x:Key="ColorObject1">#433032</Color>
-            <Color x:Key="ColorObject2">#B81422</Color>
-            <Color x:Key="ColorObject3">#E61F30</Color>
-            <Color x:Key="ColorObject4">#EB4855</Color>
-            <Color x:Key="ColorObject5">#F49DA5</Color>
-            <Color x:Key="ColorObject6">#FAD6D9</Color>
-            <Color x:Key="ColorObject7">#FDEBEC</Color>
-            <Color x:Key="ColorObject8">#FEF3F4</Color>
+            <Color x:Key="ColorObject1">#382E42</Color>
+            <Color x:Key="ColorObject2">#963D63</Color>
+            <Color x:Key="ColorObject3">#AF5276</Color>
+            <Color x:Key="ColorObject4">#BD7894</Color>
+            <Color x:Key="ColorObject5">#D5A5BA</Color>
+            <Color x:Key="ColorObject6">#EAD3E0</Color>
+            <Color x:Key="ColorObject7">#F3E8F0</Color>
+            <Color x:Key="ColorObject8">#F9F3F7</Color>
             <Color x:Key="ColorObjectBg0">#E17D85</Color>
             <Color x:Key="ColorObjectBg1">#BEFDEBEC</Color>
             <SolidColorBrush x:Key="ColorBrushGray1">#404040</SolidColorBrush>
@@ -63,20 +63,26 @@
             <SolidColorBrush x:Key="ColorBrushWhite" Color="#ffffff" />
             <SolidColorBrush x:Key="ColorBrushTransparent" Color="Transparent" />
             <SolidColorBrush x:Key="ColorBrushSemiTransparent">#01FEF3F4</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrushBackgroundTransparentSidebar" Color="#F1FFFFFF" />
+            <SolidColorBrush x:Key="ColorBrushBackgroundTransparentSidebar" Color="#DDFAF8FC" />
 
             <!-- 设计令牌（Surface / Border / Text / Shadow / 芙兰点缀） -->
             <SolidColorBrush x:Key="ColorBrushSurface" Color="#FFFFFF" />
-            <SolidColorBrush x:Key="ColorBrushSurfaceSoft" Color="#FFF7F7" />
-            <SolidColorBrush x:Key="ColorBrushCardBorder" Color="#F2DEDE" />
-            <SolidColorBrush x:Key="ColorBrushSoftBorder" Color="#EFD6D6" />
-            <SolidColorBrush x:Key="ColorBrushHoverFill" Color="#FDEEEF" />
-            <SolidColorBrush x:Key="ColorBrushAccentSoft" Color="#FCE8EA" />
-            <SolidColorBrush x:Key="ColorBrushAccentBorder" Color="#F3C3C9" />
-            <SolidColorBrush x:Key="ColorBrushTextSecondary" Color="#7C6B70" />
-            <SolidColorBrush x:Key="ColorBrushTextTertiary" Color="#A39398" />
+            <LinearGradientBrush x:Key="ColorBrushCardSurface" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FAFFFFFF" Offset="0" />
+                <GradientStop Color="#F5FCFAFD" Offset="0.55" />
+                <GradientStop Color="#F5FCF7F8" Offset="1" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="ColorBrushSurfaceSoft" Color="#F7F3F8" />
+            <SolidColorBrush x:Key="ColorBrushCardBorder" Color="#E7DEEA" />
+            <SolidColorBrush x:Key="ColorBrushSoftBorder" Color="#DCD2E1" />
+            <SolidColorBrush x:Key="ColorBrushHoverFill" Color="#F3EAF2" />
+            <SolidColorBrush x:Key="ColorBrushAccentSoft" Color="#F0E3EE" />
+            <SolidColorBrush x:Key="ColorBrushAccentBorder" Color="#DCC1D4" />
+            <SolidColorBrush x:Key="ColorBrushTextSecondary" Color="#706578" />
+            <SolidColorBrush x:Key="ColorBrushTextTertiary" Color="#827889" />
             <SolidColorBrush x:Key="ColorBrushRedBorder" Color="#F0AEAB" />
             <SolidColorBrush x:Key="ColorBrushOnAccent" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ColorBrushPrimaryHover" Color="#A0476B" />
             <Color x:Key="ColorObjectOnAccent">#FFFFFF</Color>
             <LinearGradientBrush x:Key="ColorBrushAccentGradient" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="#F2667A" Offset="0" />
@@ -84,8 +90,8 @@
                 <GradientStop Color="#B81422" Offset="1" />
             </LinearGradientBrush>
             <!-- 金色点缀：呼应芙兰的金发与星星 -->
-            <SolidColorBrush x:Key="ColorBrushGold" Color="#C9A227" />
-            <SolidColorBrush x:Key="ColorBrushGoldSoft" Color="#FBF1D3" />
+            <SolidColorBrush x:Key="ColorBrushGold" Color="#997128" />
+            <SolidColorBrush x:Key="ColorBrushGoldSoft" Color="#FBF3E3" />
             <SolidColorBrush x:Key="ColorBrushGoldBorder" Color="#E9CF86" />
             <!-- 水晶翼七色：标题栏细线与水晶装饰 -->
             <SolidColorBrush x:Key="ColorBrushCrystal1" Color="#E04555" />
@@ -113,10 +119,26 @@
                 <GradientStop Color="#00FFFFFF" Offset="0.55" />
                 <GradientStop Color="#12FFFFFF" Offset="1" />
             </LinearGradientBrush>
-            <DropShadowEffect x:Key="EffectPopupShadow" BlurRadius="16" ShadowDepth="3" Direction="270" Opacity="0.18" RenderingBias="Quality" />
+            <DropShadowEffect x:Key="EffectPopupShadow" Color="#392233" BlurRadius="20" ShadowDepth="4" Direction="270" Opacity="0.14" RenderingBias="Quality" />
+
+            <SolidColorBrush x:Key="ColorBrushTextPrimary" Color="#32272F" />
+            <SolidColorBrush x:Key="ColorBrushCanvas" Color="#F5F1F7" />
+            <Style x:Key="ControlFocusRing" TargetType="Control">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Control">
+                            <Border Margin="-3" CornerRadius="8" BorderThickness="2"
+                                    BorderBrush="{DynamicResource ColorBrush2}" IsHitTestVisible="False" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
             <!-- Window -->
             <Style TargetType="{x:Type Window}" x:Key="MyWindow">
+                <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+                <Setter Property="UseLayoutRounding" Value="True" />
+                <Setter Property="FontFamily" Value="Resources/#PCL English, Microsoft YaHei UI" />
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -180,6 +202,19 @@
                 <Setter Property="Foreground" Value="{DynamicResource ColorBrush1}" />
                 <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                 <Setter Property="FontFamily" Value="Resources/#PCL English, Microsoft YaHei UI" />
+            </Style>
+
+            <Style x:Key="PageHeading" TargetType="TextBlock" BasedOn="{StaticResource BasedOnTextBlock}">
+                <Setter Property="FontSize" Value="23" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Foreground" Value="{StaticResource ColorBrushTextPrimary}" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+            <Style x:Key="PageDescription" TargetType="TextBlock" BasedOn="{StaticResource BasedOnTextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource ColorBrushTextSecondary}" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="LineHeight" Value="20" />
+                <Setter Property="Margin" Value="0,6,0,0" />
             </Style>
 
             <!-- ScrollViewer -->
@@ -299,7 +334,7 @@
             <Style TargetType="local:MyTextBox">
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Background" Value="{StaticResource ColorBrushSurface}" />
-                <Setter Property="CornerRadius" Value="6" />
+                <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="SelectionBrush" Value="{DynamicResource ColorBrush3}" />
                 <Setter Property="Foreground" Value="{DynamicResource ColorBrush1}" />
@@ -395,23 +430,23 @@
             <Style TargetType="local:MyComboBox">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="SnapsToDevicePixels" Value="True" />
-                <Setter Property="Foreground" Value="{DynamicResource ColorBrushSoftBorder}" />
+                <Setter Property="Foreground" Value="{StaticResource ColorBrushTextPrimary}" />
                 <Setter Property="Background" Value="{StaticResource ColorBrushSurface}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource ColorBrushSoftBorder}" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="FocusVisualStyle" Value="{StaticResource ControlFocusRing}" />
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="MaxDropDownHeight" Value="320" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
                             <Grid>
-                                <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" />
+                                <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" />
                                 <ToggleButton Margin="0,0,6,0" Foreground="{DynamicResource ColorBrush4}" IsTabStop="False" SnapsToDevicePixels="False" Focusable="False" IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" />
                                 <ContentPresenter x:Name="PART_Content" Margin="10,0,25,0" IsHitTestVisible="False" VerticalAlignment="Center"
                                                   Content="{TemplateBinding SelectionBoxItem}" 
                                                   ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
                                                   ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
-                                <Popup x:Name="PART_Popup" SnapsToDevicePixels="True" VerticalOffset="-8" HorizontalOffset="-7" AllowsTransparency="True" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="Fade">
+                                <Popup x:Name="PART_Popup" SnapsToDevicePixels="True" VerticalOffset="-3" HorizontalOffset="-7" AllowsTransparency="True" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="Fade">
                                     <Grid x:Name="PanPopup">
                                         <Border Background="{StaticResource ColorBrushSurface}" CornerRadius="9" Margin="7" Effect="{StaticResource EffectPopupShadow}" />
                                         <Border x:Name="dropDownBorder" Margin="7" CornerRadius="9" BorderBrush="{StaticResource ColorBrushCardBorder}" BorderThickness="1" Width="{TemplateBinding Width}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
@@ -438,10 +473,10 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ComboBox">
                                     <Grid>
-                                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" />
+                                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" />
                                         <ToggleButton Margin="0,0,6,0" Foreground="{DynamicResource ColorBrush4}" IsTabStop="False" SnapsToDevicePixels="False" Focusable="False" IsChecked="{Binding IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" />
                                         <local:MyTextBox x:Name="PART_EditableTextBox" BorderThickness="0" Margin="4,0,24,0" Padding="0" Background="{x:Null}" />
-                                        <Popup x:Name="PART_Popup" SnapsToDevicePixels="True" VerticalOffset="-8" HorizontalOffset="-7" AllowsTransparency="True" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="Fade">
+                                        <Popup x:Name="PART_Popup" SnapsToDevicePixels="True" VerticalOffset="-3" HorizontalOffset="-7" AllowsTransparency="True" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="Fade">
                                             <Grid x:Name="PanPopup">
                                                 <Border Background="{StaticResource ColorBrushSurface}" CornerRadius="9" Margin="7" Effect="{StaticResource EffectPopupShadow}" />
                                                 <Border x:Name="dropDownBorder" SnapsToDevicePixels="False" Margin="7" CornerRadius="9" BorderBrush="{StaticResource ColorBrushCardBorder}" BorderThickness="1" Width="{TemplateBinding Width}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
@@ -511,7 +546,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBoxItem">
-                            <Border x:Name="ItemBorder" Padding="6,4" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                            <Border x:Name="ItemBorder" CornerRadius="5" Margin="3,1" Padding="8,6" SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
                                 <ContentPresenter />
                             </Border>
                         </ControlTemplate>
@@ -558,7 +593,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="MenuItem">
-                            <Border Name="PanBack" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Height="28" CornerRadius="5" Margin="0" >
+                            <Border Name="PanBack" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Height="32" CornerRadius="6" Margin="0,1" >
                                 <Grid SnapsToDevicePixels="False" UseLayoutRounding="False">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>

@@ -6,6 +6,22 @@
     PanScroll="PanBack">
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
         <StackPanel x:Name="PanMain" Margin="25,10">
+            <StackPanel Margin="0,4,0,16">
+                <TextBlock Text="个性化" Style="{StaticResource PageHeading}" />
+                <TextBlock Text="选择喜欢的配色、背景与音乐，布置你的冒险空间。" Style="{StaticResource PageDescription}" />
+            </StackPanel>
+            <local:MyCard Margin="0,0,0,15" HasMouseAnimation="False">
+                <Grid Margin="2">
+                    <local:ScarletBackdrop CornerRadius="10" />
+                    <TextBlock Text="红魔馆 · 双生流光" Margin="16,10,16,0" VerticalAlignment="Top" FontWeight="SemiBold" Foreground="#58426D" IsHitTestVisible="False" />
+                    <StackPanel Margin="23,42,23,20">
+                        <TextBlock Text="蕾米莉亚的月夜，与芙兰朵露的虹彩。" FontSize="15" FontWeight="SemiBold" Foreground="#58426D" TextWrapping="Wrap" />
+                        <TextBlock Text="月夜紫、绯红与琥珀色缓缓交织，陪伴每一次出发。" Margin="0,8,0,16" TextWrapping="Wrap" Foreground="{StaticResource ColorBrushTextSecondary}" />
+                        <local:MyCheckBox x:Name="CheckScarletMotion" local:SettingService.Key="UiScarletMotion" Text="启用动态流光" />
+                        <TextBlock Text="关闭后保留静态双色渐变。窗口最小化、隐藏或系统关闭动画时，自动停止流光。" Margin="0,9,0,0" FontSize="12" LineHeight="19" TextWrapping="Wrap" Foreground="{StaticResource ColorBrushTextSecondary}" />
+                    </StackPanel>
+                </Grid>
+            </local:MyCard>
             <local:MyCard Margin="0,15" Title="基础" x:Name="CardLauncher">
                 <Grid Margin="25,40,25,17">
                     <StackPanel>
@@ -38,7 +54,7 @@
                             <local:MySlider local:SettingService.Key="UiLauncherLight" 
                                             Grid.Row="2" Grid.Column="4" x:Name="SliderLauncherLight" Visibility="Collapsed" MaxValue="40" ValueByKey="5" Margin="0,10,0,0" />
                         </Grid>
-                        <Grid x:Name="PanLauncherTheme" Height="90" Margin="0,0,0,7">
+                        <Grid x:Name="PanLauncherTheme" Height="90" Margin="0,0,0,7" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="Name1" />
                                 <ColumnDefinition />

@@ -37,10 +37,10 @@ Public Class MyHint
     Private Sub UpdateUI() Handles Me.Loaded
         Select Case Theme
             Case Themes.Blue
-                Background = New MyColor("#FDF0F1")
-                BorderBrush = New MyColor("#F0C9CE")
-                LabText.Foreground = New MyColor("#B81422")
-                BtnClose.Foreground = New MyColor("#B81422")
+                Background = New MyColor("#F7F3F8")
+                BorderBrush = New MyColor("#DED2E3")
+                LabText.Foreground = New MyColor("#65446E")
+                BtnClose.Foreground = New MyColor("#65446E")
             Case Themes.Red
                 Background = New MyColor("#FDECEC")
                 BorderBrush = New MyColor("#E88C8C")
@@ -49,8 +49,8 @@ Public Class MyHint
             Case Themes.Yellow
                 Background = New MyColor("#FDF1E3")
                 BorderBrush = New MyColor("#EFC08A")
-                LabText.Foreground = New MyColor("#d86c00")
-                BtnClose.Foreground = New MyColor("#d86c00")
+                LabText.Foreground = New MyColor("#8D570D")
+                BtnClose.Foreground = New MyColor("#8D570D")
         End Select
     End Sub
     <Obsolete("IsWarn 已过时。请换用 Theme 属性。")>

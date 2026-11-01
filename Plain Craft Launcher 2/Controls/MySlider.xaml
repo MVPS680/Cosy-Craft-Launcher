@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="16" d:DesignWidth="162" 
-             FocusVisualStyle="{x:Null}"
-             MinHeight="16" UseLayoutRounding="False" SnapsToDevicePixels="False" BorderBrush="{DynamicResource ColorBrushBg0}" Name="PanBack" Background="{StaticResource ColorBrushSemiTransparent}" Focusable="True">
+             FocusVisualStyle="{StaticResource ControlFocusRing}"
+             MinHeight="24" UseLayoutRounding="False" SnapsToDevicePixels="False" BorderBrush="{DynamicResource ColorBrushBg0}" Name="PanBack" Background="{StaticResource ColorBrushSemiTransparent}" Focusable="True">
     <Grid x:Name="PanMain" MinHeight="16" MaxHeight="16" IsHitTestVisible="False">
         <Line Height="6" Name="LineBack" Stroke="{Binding ElementName=PanBack, Path=BorderBrush}" Opacity="0.42" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" X2="10000" Y1="3" Y2="3" HorizontalAlignment="Right" Width="0" SnapsToDevicePixels="True" Margin="0,0,1,0" />
         <Line Height="6" Name="LineFore" Stroke="{Binding ElementName=PanBack, Path=BorderBrush}" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" X2="10000" Y1="3" Y2="3" Width="0" HorizontalAlignment="Left" SnapsToDevicePixels="True" Margin="1,0,0,0" />
@@ -18,9 +18,9 @@
             </Ellipse.RenderTransform>
         </Ellipse>
         <Popup Name="Popup" AllowsTransparency="True" IsHitTestVisible="False" PopupAnimation="Fade" VerticalOffset="38" HorizontalOffset="{Binding Margin.Left, ElementName=ShapeDot}" Placement="Center" PlacementRectangle="8,0,0,0">
-            <Border BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1.5" CornerRadius="3" MaxWidth="500" Background="White" Margin="0,0,4,4" SnapsToDevicePixels="True">
+            <Border BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1.5" CornerRadius="8" MaxWidth="500" Background="{StaticResource ColorBrushSurface}" Margin="0,0,4,4" SnapsToDevicePixels="True">
                 <Border.Effect>
-                    <DropShadowEffect Opacity="0.4" BlurRadius="4" ShadowDepth="2" />
+                    <DropShadowEffect Opacity="0.14" BlurRadius="12" ShadowDepth="3" />
                 </Border.Effect>
                 <TextBlock Name="TextHint" TextWrapping="Wrap" Foreground="{DynamicResource ColorBrush1}" Margin="7,5" FontSize="12"/>
             </Border>

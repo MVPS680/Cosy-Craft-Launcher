@@ -227,4 +227,10 @@ Public Class MyCheckBox
 
 #End Region
 
+    Private Sub Checkbox_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If e.Key <> Key.Space OrElse Not IsEnabled OrElse Not IsKeyboardFocused Then Return
+        e.Handled = True
+        If Not e.IsRepeat AndAlso AllowMouseDown Then SetChecked(Not Checked, True)
+    End Sub
+
 End Class

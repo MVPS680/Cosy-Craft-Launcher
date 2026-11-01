@@ -7,6 +7,10 @@
     PanScroll="PanBack">
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
         <StackPanel x:Name="PanMain" Margin="25,10">
+            <StackPanel Margin="0,4,0,16">
+                <TextBlock Text="下载与工具" Style="{StaticResource PageHeading}" />
+                <TextBlock Text="调整下载方式，管理启动器行为与常用工具。" Style="{StaticResource PageDescription}" />
+            </StackPanel>
             <local:MyCard Margin="0,15" Title="下载">
                 <StackPanel Margin="25,37,25,15">
                     <Grid>
