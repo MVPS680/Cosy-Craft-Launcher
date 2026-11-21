@@ -1,4 +1,4 @@
-# 向 Overwolf / CurseForge 申请「公开发布版内置 API Key」的书面许可（草稿）
+﻿# 向 Overwolf / CurseForge 申请「公开发布版内置 API Key」的书面许可（草稿）
 
 ## 为什么需要这一步
 
@@ -14,7 +14,7 @@ CurseForge 第三方 API 条款（[官方原文](https://support.curseforge.com/
 1. 打开 <https://support.curseforge.com/>，右上角 **Contact support** 新建工单；
 2. 分类选 **3rd Party API**，主题用下面的英文标题；
 3. 正文粘贴英文草稿，按实际情况替换 `<...>` 占位符；
-4. 附上：GitHub 仓库链接、Release 链接、Entra 应用 ID（`7674a7ae-35c1-437c-b97b-a44025124f67`）、已有 API 申请单号（若有）；
+4. 附上：GitHub 仓库链接、Release 链接、Entra 应用 ID（`<你的 Entra 应用 ID>`）、已有 API 申请单号（若有）；
 5. 等待回复（API 类工单通常 48–72 小时首次响应，许可事项可能更久）。
 
 > 也可以在提交 API Key 申请表单时，在用途说明里直接写明「计划内置到公开发布的开源启动器，请求 §2.3 书面许可」，两边信息一致更好。
@@ -26,7 +26,7 @@ Subject: Request for written permission under §2.3 — embedding a CurseForge A
 
 Dear Overwolf / CurseForge API team,
 
-We maintain MY-PCL (https://github.com/FLandreyu/MY-PCL), a free, non-commercial,
+We maintain Cosy Craft Launcher (https://github.com/MVPS680/Cosy-Craft-Launcher), a free, non-commercial,
 community-built fork of the open-source PCL launcher for Minecraft: Java Edition.
 The launcher is distributed as a single Windows executable through GitHub Releases;
 its full source and built binaries are public.
@@ -44,7 +44,7 @@ for continued API use, so we would like to request written permission to embed a
 issued to us inside our publicly distributed builds.
 
 Details:
-- Application: MY-PCL Launcher (Entra app ID 7674a7ae-35c1-437c-b97b-a44025124f67),
+- Application: Cosy Craft Launcher (Entra app ID <your Entra application ID>),
   Windows x64 desktop, .NET Framework 4.8, single-file exe
 - Distribution: GitHub Releases, free of charge, no ads, no bundling of CurseForge
   content beyond what the API returns for user-initiated installs
@@ -66,8 +66,9 @@ feature that requires a user-supplied key, and recommend Modrinth by default.
 Thank you for your time.
 
 <your name>
-Maintainer, MY-PCL
-https://github.com/FLandreyu/MY-PCL
+Maintainer, Cosy Craft Launcher
+https://github.com/MVPS680/Cosy-Craft-Launcher
+https://mvpclub.cc
 <contact email>
 ```
 
@@ -83,6 +84,6 @@ https://github.com/FLandreyu/MY-PCL
 
 拿到书面许可后：
 
-1. 把 Key 写入 `Plain Craft Launcher 2/Modules/ModSecret.vb:12` 的默认值（保留环境变量优先，方便高级用户覆盖）；
+1. 把 Key 写入 `Cosy Craft Launcher/Modules/ModSecret.vb:12` 的默认值（保留环境变量优先，方便高级用户覆盖）；
 2. 在 README 注明「本版本内置的 CurseForge Key 依据 §2.3 书面许可使用」，并遵守协议里的配额与归属要求；
 3. 重编、发版，用户零配置即可使用 CurseForge 搜索。

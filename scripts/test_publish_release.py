@@ -1,4 +1,4 @@
-import hashlib
+﻿import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -58,10 +58,10 @@ class PublishTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         (self.root / "docs").mkdir()
         (self.root / "docs/RELEASE_NOTES.md").write_text("Maintenance release", encoding="utf-8")
-        self.archive = self.root / "MY-PCL-2.99.0.0-r2-win.zip"
+        self.archive = self.root / "Cosy-Craft-Launcher-2.99.0.0-r2-win.zip"
         exe = b"MZ-test-executable"
         with zipfile.ZipFile(self.archive, "w") as zipped:
-            for name, data in {"Plain Craft Launcher 2.exe": exe, "LICENCE": b"license", "README.txt": b"readme",
+            for name, data in {"Cosy Craft Launcher.exe": exe, "LICENCE": b"license", "README.txt": b"readme",
                                "BUILD.json": json.dumps({"tag": CONFIG["tag"], "configuration": "Release",
                                 "source_commit": COMMIT, "executable_sha256": hashlib.sha256(exe).hexdigest()}).encode()}.items():
                 zipped.writestr(name, data)

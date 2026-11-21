@@ -1,4 +1,4 @@
-"""Publish a new maintenance release only after uploaded assets verify."""
+﻿"""Publish a new maintenance release only after uploaded assets verify."""
 import argparse
 import hashlib
 import json
@@ -15,14 +15,14 @@ from release_asset import GitHub, ReleaseError, check_asset, get_token, prepare_
 
 def publish(directory, execute=False):
     config = configuration()
-    archive = directory / f"MY-PCL-{config['version']}-win.zip"
+    archive = directory / f"Cosy-Craft-Launcher-{config['version']}-win.zip"
     payload, digest = prepare_package(archive)
     checksum = archive.with_suffix(".zip.sha256")
     if checksum.read_text(encoding="ascii").strip() != f"{digest}  {archive.name}":
         raise ReleaseError("Checksum file does not match ZIP")
     with zipfile.ZipFile(archive) as zipped:
         identity = json.loads(zipped.read("BUILD.json"))
-        if identity.get("executable_sha256") != hashlib.sha256(zipped.read("Plain Craft Launcher 2.exe")).hexdigest():
+        if identity.get("executable_sha256") != hashlib.sha256(zipped.read("Cosy Craft Launcher.exe")).hexdigest():
             raise ReleaseError("Executable identity mismatch")
     commit = identity.get("source_commit", "")
     if (identity.get("tag") != config["tag"] or identity.get("configuration") != "Release"
@@ -33,7 +33,7 @@ def publish(directory, execute=False):
     if not execute:
         print(f"Offline preflight passed: {config['tag']} at {commit}")
         return
-    api = GitHub("FLandreyu/MY-PCL", 0, get_token())
+    api = GitHub("MVPS680/Cosy-Craft-Launcher", 0, get_token())
     # Do not move a pre-existing tag or publish bytes from a different source revision.
     refs = api.json("GET", api.base + "/git/matching-refs/tags/" + config["tag"])
     for ref in refs:

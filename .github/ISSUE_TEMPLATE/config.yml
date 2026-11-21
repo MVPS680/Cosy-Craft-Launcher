@@ -1,8 +1,11 @@
 ﻿blank_issues_enabled: false
 contact_links:
   - name: 使用说明与常见问题
-    url: https://github.com/FLandreyu/MY-PCL#readme
+    url: https://github.com/MVPS680/Cosy-Craft-Launcher#readme
     about: 查看安装、更新、账号与资源服务配置说明
   - name: 最新正式版与已知限制
-    url: https://github.com/FLandreyu/MY-PCL/releases/latest
+    url: https://github.com/MVPS680/Cosy-Craft-Launcher/releases/latest
     about: 确认正在使用的发行版本与已知限制
+  - name: MVPClub 项目主页
+    url: https://mvpclub.cc
+    about: 访问作者与维护者主页

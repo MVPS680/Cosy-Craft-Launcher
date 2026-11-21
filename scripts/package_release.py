@@ -8,6 +8,8 @@ import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+EXE_NAME = "Cosy Craft Launcher.exe"
+PROJECT = "MVPS680/Cosy-Craft-Launcher"
 
 
 def configuration():
@@ -25,35 +27,40 @@ def package(build_dir, output_dir):
     if subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT):
         raise ValueError("Commit tracked source changes before packaging")
     files = {}
-    for name in ("Plain Craft Launcher 2.exe", "Plain Craft Launcher 2.exe.config"):
+    for name in (EXE_NAME, EXE_NAME + ".config"):
         files[name] = (build_dir / name).read_bytes()
         if not files[name]:
             raise ValueError("Empty build output")
-    if not files["Plain Craft Launcher 2.exe"].startswith(b"MZ"):
+    if not files[EXE_NAME].startswith(b"MZ"):
         raise ValueError("Expected a Windows executable")
     files["LICENCE"] = (ROOT / "LICENCE").read_bytes()
     info = {
-        "project": "FLandreyu/MY-PCL", "version": config["version"],
-        "tag": config["tag"], "source_commit": commit, "configuration": "Release",
-        "executable_sha256": hashlib.sha256(files["Plain Craft Launcher 2.exe"]).hexdigest(),
+        "project": PROJECT, "name": "Cosy Craft Launcher", "author": "MVPClub (https://mvpclub.cc)",
+        "version": config["version"], "tag": config["tag"], "source_commit": commit,
+        "configuration": "Release",
+        "executable_sha256": hashlib.sha256(files[EXE_NAME]).hexdigest(),
     }
     files["BUILD.json"] = (json.dumps(info, indent=2) + "\n").encode()
     files["README.txt"] = (
-        f"Plain Craft Launcher (PCL) - MY-PCL {config['version']}\n"
-        f"Source: https://github.com/FLandreyu/MY-PCL/tree/{commit}\n"
-        "Unofficial community-maintained distribution. Configuration: Release.\n\n"
-        "Extract all files into a writable folder and run Plain Craft Launcher 2.exe.\n"
+        f"Cosy Craft Launcher {config['version']}\n"
+        f"Author: MVPClub (https://mvpclub.cc)\n"
+        f"Source: https://github.com/{PROJECT}/tree/{commit}\n"
+        "Unofficial third-party distribution based on the public PCL 2.99.0.0 source.\n"
+        "Configuration: Release.\n\n"
+        f"Extract all files into a writable folder and run {EXE_NAME}.\n"
         "Keep the .exe.config alongside the executable. Back up saves before updating.\n"
         "Requires Windows, .NET Framework 4.8 and Java suitable for the game version.\n\n"
-        "Microsoft login requires your approved PCL_MS_CLIENT_ID.\n"
-        "CurseForge services require your PCL_CURSEFORGE_API_KEY. Neither is bundled.\n"
+        "Microsoft login requires your approved COSY_MS_CLIENT_ID\n"
+        "(legacy PCL_MS_CLIENT_ID is also accepted).\n"
+        "CurseForge services require your COSY_CURSEFORGE_API_KEY\n"
+        "(legacy PCL_CURSEFORGE_API_KEY is also accepted). Neither is bundled.\n"
         "Modrinth search needs no user-provided key. Updates are manual.\n"
         "The executable is unsigned. Full account/download/game-launch testing is not claimed.\n\n"
-        "Instructions: https://github.com/FLandreyu/MY-PCL#readme\n"
+        f"Instructions: https://github.com/{PROJECT}#readme\n"
         "License: LICENCE. Build identity: BUILD.json.\n"
     ).encode()
     output_dir.mkdir(parents=True, exist_ok=True)
-    archive_path = output_dir / f"MY-PCL-{config['version']}-win.zip"
+    archive_path = output_dir / f"Cosy-Craft-Launcher-{config['version']}-win.zip"
     with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, content in sorted(files.items()):
             entry = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0))

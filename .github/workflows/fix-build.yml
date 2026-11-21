@@ -1,4 +1,4 @@
-name: Fix Build
+name: Cosy Craft Launcher Fix Build
 
 # 第三方修复版构建：推 v*-fix tag 时自动编译、打包并创建/更新 Release。
 # 也可以在 Actions 页面手动运行（只构建并上传 artifact）。
@@ -30,28 +30,29 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          msbuild "Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" -p:Configuration=Release
+          msbuild "Cosy Craft Launcher\Cosy Craft Launcher.vbproj" -p:Configuration=Release
           if ($LASTEXITCODE -ne 0) {
             Write-Host "首次构建失败，尝试显式指定 .NET SDK 路径重试..."
             $sdk = Get-ChildItem "$env:ProgramFiles\dotnet\sdk" -Directory | Sort-Object Name -Descending | Select-Object -First 1
             $env:MSBuildSDKsPath = Join-Path $sdk.FullName 'Sdks'
             $env:MSBuildEnableWorkloadResolver = 'false'
-            msbuild "Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" -p:Configuration=Release
+            msbuild "Cosy Craft Launcher\Cosy Craft Launcher.vbproj" -p:Configuration=Release
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
 
       - name: Package
         shell: pwsh
         run: |
-          $modbase = "Plain Craft Launcher 2\Modules\Base\ModBase.vb"
+          $modbase = "Cosy Craft Launcher\Modules\Base\ModBase.vb"
           $version = (Select-String -Path $modbase -Pattern 'VersionBaseName As String = "([\d.]+)"').Matches[0].Groups[1].Value
           Write-Host "版本：$version"
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Copy-Item "Plain Craft Launcher 2\bin\Plain Craft Launcher 2.exe" "dist\Plain Craft Launcher 2.exe"
+          Copy-Item "Cosy Craft Launcher\bin\Cosy Craft Launcher.exe" "dist\Cosy Craft Launcher.exe"
           Copy-Item "LICENCE" "dist\LICENCE"
 
           $notes = @"
-          PCL $version 第三方修复版（恢复 MC 下载）
+          Cosy Craft Launcher $version 第三方修复版（恢复 MC 下载）
+          作者：MVPClub（https://mvpclub.cc）
 
           构建：GitHub Actions $env:GITHUB_SHA
           来源：https://github.com/$env:GITHUB_REPOSITORY
@@ -62,8 +63,8 @@ jobs:
           3. 正版登录 403 时提示「应用未通过 Mojang 白名单审核」，不再误报为 IP 异常。
 
           已知限制：
-          - 未注入官方 CI 的微软 OAuth 密钥：正版登录需自备已获 Mojang 白名单批准的 Entra 应用（环境变量 PCL_MS_CLIENT_ID）。
-          - 未注入 CurseForge API Key：CurseForge 搜索需自备 Key，Modrinth 开箱即用。
+          - 未注入官方 CI 的微软 OAuth 密钥：正版登录需自备已获 Mojang 白名单批准的 Entra 应用（环境变量 COSY_MS_CLIENT_ID，兼容 PCL_MS_CLIENT_ID）。
+          - 未注入 CurseForge API Key：CurseForge 搜索需自备 Key（环境变量 COSY_CURSEFORGE_API_KEY，兼容 PCL_CURSEFORGE_API_KEY），Modrinth 开箱即用。
           - exe 未签名，Windows SmartScreen 可能提示。
 
           许可：沿用《PCL 分发有限许可》，见 LICENCE。
@@ -71,20 +72,20 @@ jobs:
           # 说明文件名必须用 ASCII：PS 5.1 的 Compress-Archive 会把中文名打成乱码
           [IO.File]::WriteAllText("dist\README.txt", $notes, (New-Object Text.UTF8Encoding $true))
 
-          Compress-Archive -Path "dist\Plain Craft Launcher 2.exe", "dist\LICENCE", "dist\README.txt" `
-            -DestinationPath "dist\PCL-$version-fix-win.zip" -CompressionLevel Optimal
+          Compress-Archive -Path "dist\Cosy Craft Launcher.exe", "dist\LICENCE", "dist\README.txt" `
+            -DestinationPath "dist\Cosy-Craft-Launcher-$version-fix-win.zip" -CompressionLevel Optimal
 
           $release = @"
-          ## 下载即用：PCL $version 修复版（已重新开启下载）
+          ## 下载即用：Cosy Craft Launcher $version 修复版（已重新开启下载）
 
-          **官方 PCL 2.99 关闭了 Minecraft 下载，这个版本把它打开了。** 解压 → 双击 → 进「下载」页，就能装游戏版本、Forge / Fabric / NeoForge 和整合包。
+          **Cosy Craft Launcher 基于 PCL 2.99 源码构建，并恢复了 Minecraft 下载入口。** 解压 → 双击 → 进「下载」页，就能装游戏版本、Forge / Fabric / NeoForge 和整合包。
 
           ![下载页](https://github.com/$env:GITHUB_REPOSITORY/raw/main/docs/preview.png)
 
           ### 怎么用
-          1. 下载本页的 `PCL-$version-fix-win.zip`
+          1. 下载本页的 `Cosy-Craft-Launcher-$version-fix-win.zip`
           2. 解压到任意目录（免安装）
-          3. 双击 `Plain Craft Launcher 2.exe`，进入「下载」页
+          3. 双击 `Cosy Craft Launcher.exe`，进入「下载」页
 
           首次运行若提示「Windows 已保护你的电脑」，点「更多信息 → 仍要运行」：程序没有代码签名。
 
@@ -102,14 +103,12 @@ jobs:
           > 日常搜索用 Modrinth 就够了：不需要任何配置，下载完就能搜、能装。
 
           ### 正版登录怎么办
-          本版不含微软 OAuth 客户端 ID，需要自备已获 Mojang 白名单批准的 Entra 应用，再通过 `PCL_MS_CLIENT_ID` 或自行重编配置，详见 [README](https://github.com/$env:GITHUB_REPOSITORY/blob/main/README.md)。不想折腾的话，用官方版登录启动、用本版下载即可，两版可共存。
+          本版不含微软 OAuth 客户端 ID，需要自备已获 Mojang 白名单批准的 Entra 应用，再通过 `COSY_MS_CLIENT_ID`（兼容 `PCL_MS_CLIENT_ID`）或自行重编配置，详见 [README](https://github.com/$env:GITHUB_REPOSITORY/blob/main/README.md)。不想折腾的话，用官方版登录启动、用本版下载即可，两版可共存。
 
           ### 这是官方版吗
           不是。基于 [Meloong-Git/PCL](https://github.com/Meloong-Git/PCL) 的 $version 源码重编，改动见仓库提交记录。许可见 `LICENCE`。
 
           隐私政策：[PRIVACY.md](https://github.com/$env:GITHUB_REPOSITORY/blob/main/PRIVACY.md) ｜ 使用条款：[TERMS.md](https://github.com/$env:GITHUB_REPOSITORY/blob/main/TERMS.md)
-
-          关于为什么本版本不直接内置 CurseForge Key，以及向 Overwolf 申请书面许可的草稿：[docs/overwolf-api-license-request.md](https://github.com/$env:GITHUB_REPOSITORY/blob/main/docs/overwolf-api-license-request.md)。
           "@
           [IO.File]::WriteAllText("dist\RELEASE.md", $release, (New-Object Text.UTF8Encoding $false))
 
@@ -118,14 +117,14 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PCL-${{ env.VERSION }}-fix-win
+          name: Cosy-Craft-Launcher-${{ env.VERSION }}-fix-win
           path: dist/*.zip
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          name: PCL ${{ env.VERSION }} 修复版 · 重新开启 Minecraft 下载
+          name: Cosy Craft Launcher ${{ env.VERSION }} 修复版 · 重新开启 Minecraft 下载
           body_path: dist/RELEASE.md
           files: dist/*.zip
           draft: false
