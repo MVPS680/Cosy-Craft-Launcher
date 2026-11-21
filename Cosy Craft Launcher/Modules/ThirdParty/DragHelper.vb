@@ -113,9 +113,10 @@ Public Class DragHelper
         Dim isVistaOrHigher As Boolean = ver >= New Version(6, 0)
         Dim isNt61OrHiger As Boolean = ver >= New Version(6, 1)
 
-        If isVistaOrHigher Then
-            Dim status As New CHANGEFILTERSTRUCT With {.cbSize = 8}
-            For Each msg As UInteger In New UInteger() {WM_DROPFILES, WM_COPYGLOBALDATA, WM_COPYDATA}
+        If Not isVistaOrHigher Then Return
+        Dim status As New CHANGEFILTERSTRUCT With {.cbSize = 8}
+        For Each msg As UInteger In New UInteger() {WM_DROPFILES, WM_COPYGLOBALDATA, WM_COPYDATA}
+            Try
                 Dim [error] As Boolean = False
                 If isNt61OrHiger Then
                     [error] = Not ChangeWindowMessageFilterEx(handle, msg, MSGFLT_ALLOW, status)
@@ -124,8 +125,11 @@ Public Class DragHelper
                 End If
 
                 If [error] Then Throw New Win32Exception(Marshal.GetLastWin32Error())
-            Next
-        End If
+            Catch ex As Win32Exception
+                '部分安全策略下该系统调用会被拒绝，此时放弃接收高权限拖放即可，不应影响启动
+                Logger.Warn(ex, $"允许拖放消息失败（{msg}）")
+            End Try
+        Next
     End Sub
 
     Private Shared Function TryGetDropInfo(msg As Integer, wParam As IntPtr, ByRef dropFilePaths As String(), ByRef dropPoint As POINT) As Boolean

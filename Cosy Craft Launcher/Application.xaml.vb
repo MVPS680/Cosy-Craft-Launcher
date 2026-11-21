@@ -11,7 +11,24 @@ Public Class Application
             MeloongCore.Wpf.Main.Init()
             If Not (e.Args.Contains("--update") OrElse e.Args.Contains("--gpu") OrElse e.Args.Contains("--memory")) Then '若是通过命令行调用，则不检查单例、不轮换日志（#9137）
                 WaitingMutex(e)
-                Logger.Instance = New LauncherLogger With {.logFolder = Paths.BaseThenName, .MinLevel = If(ModeDebug, LogLevel.Trace, LogLevel.Info)}
+                '选择可写的数据目录，避免 exe 位于只读位置时反复写入失败
+                Dim DataCandidates As New List(Of String) From {
+                    Paths.Base & "PCL\",
+                    PathUtils.AddSlashSuffix(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\PCL"),
+                    PathUtils.AddSlashSuffix(Paths.AppDataThenName),
+                    PathUtils.AddSlashSuffix(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) & "\PCL")
+                }
+                For Each Candidate In DataCandidates.Distinct(StringComparer.OrdinalIgnoreCase)
+                    Try
+                        DirectoryUtils.Create(Candidate)
+                        CheckPermissionWithException(Candidate)
+                        PathData = Candidate
+                        Exit For
+                    Catch
+                        '该候选目录不可写，继续尝试下一个
+                    End Try
+                Next
+                Logger.Instance = New LauncherLogger With {.logFolder = PathData, .MinLevel = If(ModeDebug, LogLevel.Trace, LogLevel.Info)}
             End If
             '提升主线程优先级
             Thread.CurrentThread.Priority = ThreadPriority.Highest
@@ -68,33 +85,61 @@ Public Class Application
             End If
             '初始化文件结构
             Try
-                DirectoryUtils.Create(Paths.Base & "PCL\Pictures\")
-                DirectoryUtils.Create(Paths.Base & "PCL\Musics\")
-                CheckPermissionWithException(Paths.Base & "PCL\")
+                DirectoryUtils.Create(PathData & "Pictures\")
+                DirectoryUtils.Create(PathData & "Musics\")
+                CheckPermissionWithException(PathData)
             Catch ex As Exception
-                MsgBox($"Cosy Craft Launcher 没有对当前文件夹的权限（{Paths.Base}PCL\），请尝试：" & vbCrLf &
+                MsgBox($"Cosy Craft Launcher 没有对当前文件夹的权限（{PathData}），请尝试：" & vbCrLf &
                   "1. 将 Cosy Craft Launcher 移动到其他文件夹" & If(PathUtils.GetDiskName(Paths.Base) = "C"c, "，例如 C 盘和桌面以外的其他位置。", "。") & vbCrLf &
                   "2. 删除当前目录中的 PCL 配置文件夹，然后再试。" & vbCrLf &
                   "3. 右键 Cosy Craft Launcher 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
                 MsgBoxStyle.Critical, "运行环境错误")
                 Environment.[Exit](ProcessReturnValues.Cancel)
             End Try
-RetryCacheCheck:
+            '缓存文件夹：依次尝试设置值、临时目录、本地应用数据目录、漫游应用数据目录
+            Dim CacheCandidates As New List(Of String) From {
+                PathTemp,
+                Path.GetTempPath() & "PCL\",
+                PathUtils.AddSlashSuffix(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\PCL\"),
+                PathUtils.AddSlashSuffix(Paths.AppDataThenName & "Cache")
+            }
+            Dim SelectedCache As String = Nothing
+            Dim CacheError As Exception = Nothing
+            For Each Candidate In CacheCandidates.Distinct(StringComparer.OrdinalIgnoreCase)
+                For Attempt = 1 To 2
+                    Try
+                        DirectoryUtils.Create(Candidate)
+                        CheckPermissionWithException(Candidate)
+                        SelectedCache = Candidate
+                        CacheError = Nothing
+                        Exit For
+                    Catch ex As Exception
+                        CacheError = ex
+                        Thread.Sleep(150)
+                    End Try
+                Next
+                If SelectedCache IsNot Nothing Then Exit For
+            Next
+            If SelectedCache IsNot Nothing Then
+                If Not PathUtils.IsSame(SelectedCache, PathTemp) Then Settings.Set("SystemSystemCache", SelectedCache)
+                PathTemp = SelectedCache
+            Else
+                '全部不可写时仍使用本地应用数据目录，避免后续网络缓存反复报错
+                PathTemp = PathUtils.AddSlashSuffix(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) & "\PCL\")
+                MyMsgBox("Cosy Craft Launcher 无法访问缓存文件夹，程序可能无法正常使用！" & vbCrLf & vbCrLf &
+                         "错误原因：" & If(CacheError Is Nothing, "未知错误", CacheError.GetDisplay(True)) & vbCrLf & vbCrLf &
+                         "请在 设置 → 系统 → 缓存文件夹 中手动指定一个可写入的文件夹，然后重新启动 Cosy Craft Launcher。", "缓存文件夹不可用")
+            End If
             Try
-                DirectoryUtils.Create(PathTemp)
-                CheckPermissionWithException(PathTemp)
+                DirectoryUtils.Create(PathTemp & "Cache\")
             Catch ex As Exception
-                If PathUtils.IsSame(PathTemp, Path.GetTempPath() & "PCL\") Then
-                    MyMsgBox("Cosy Craft Launcher 无法访问缓存文件夹，可能导致程序出错或无法正常使用！" & vbCrLf & vbCrLf & "错误原因：" & ex.GetDisplay(True), "缓存文件夹不可用")
-                Else
-                    MyMsgBox("手动设置的缓存文件夹不可用，Cosy Craft Launcher 将使用默认缓存文件夹。" & vbCrLf & vbCrLf & "错误原因：" & ex.GetDisplay(True), "缓存文件夹不可用")
-                    Settings.Set("SystemSystemCache", "")
-                    PathTemp = Path.GetTempPath() & "PCL\"
-                    GoTo RetryCacheCheck
-                End If
+                Logger.Warn(ex, "创建缓存子目录失败")
             End Try
-            DirectoryUtils.Create(PathTemp & "Cache\")
-            DirectoryUtils.Create(Paths.AppDataThenName)
+            Try
+                DirectoryUtils.Create(Paths.AppDataThenName)
+            Catch ex As Exception
+                Logger.Warn(ex, "创建应用数据目录失败")
+            End Try
             '设置 ToolTipService 默认值
             ToolTipService.InitialShowDelayProperty.OverrideMetadata(GetType(DependencyObject), New FrameworkPropertyMetadata(100))
             '设置网络配置默认值

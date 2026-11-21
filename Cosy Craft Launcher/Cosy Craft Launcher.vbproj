@@ -752,6 +752,7 @@
   <ItemGroup>
     <Resource Include="Resources\Font.ttf" />
     <None Include="Resources\Help.zip" />
+    <None Include="Resources\BackgroundVideo.mp4" />
     <None Include="Resources\NAudio.dll" />
   </ItemGroup>
   <ItemGroup>

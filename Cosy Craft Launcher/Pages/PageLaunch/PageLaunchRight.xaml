@@ -12,21 +12,35 @@
                 <local:MyHint x:Name="PanHint" RelativeSetup="HintSnapshot" Theme="Blue" CanClose="True" Margin="0,0,0,15"
                               Text="快照版 Cosy Craft Launcher 包含尚未正式发布的测试功能，仅限赞助者自己使用。&#xa;请不要随意发给其他人，或是用来制作整合包哦！" />
                 <local:MyCard Margin="0,0,0,18" x:Name="PanWelcome" HasMouseAnimation="False">
+                    <!-- 欢迎卡片单独使用更通透的玻璃面，露出手后的动态壁纸 -->
+                    <local:MyCard.Resources>
+                        <LinearGradientBrush x:Key="ColorBrushCardSurface" StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#8AFFFFFF" Offset="0" />
+                            <GradientStop Color="#85FCFAFD" Offset="0.55" />
+                            <GradientStop Color="#80FCF7F8" Offset="1" />
+                        </LinearGradientBrush>
+                    </local:MyCard.Resources>
                     <Grid Margin="2">
-                        <local:ScarletBackdrop x:Name="ScarletHero" CornerRadius="12" />
+                        <local:ScarletBackdrop x:Name="ScarletHero" CornerRadius="12" Opacity="0.35" />
 
                         <!-- 除三个按钮外的主页欢迎内容已移除，用 MinHeight 保留原有卡片空白体积。 -->
                         <Grid Margin="26,26,26,18" MinHeight="266">
-                            <TextBlock Text="欢迎使用 Cosy Craft Launcher！" VerticalAlignment="Top" FontSize="30" FontWeight="SemiBold" TextWrapping="Wrap">
-                                <TextBlock.Foreground>
-                                    <!-- 蕾米莉亚的月色紫红过渡到芙兰朵露的彩虹金，与主题色板呼应。 -->
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="#77609D" Offset="0" />
-                                        <GradientStop Color="#C4637D" Offset="0.55" />
-                                        <GradientStop Color="#D9A24E" Offset="1" />
-                                    </LinearGradientBrush>
-                                </TextBlock.Foreground>
-                            </TextBlock>
+                            <StackPanel VerticalAlignment="Top">
+                                <TextBlock Text="欢迎使用 Cosy Craft Launcher！" FontSize="30" FontWeight="SemiBold" TextWrapping="Wrap">
+                                    <TextBlock.Foreground>
+                                        <!-- 蕾米莉亚的月色紫红过渡到芙兰朵露的彩虹金，与主题色板呼应。 -->
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#77609D" Offset="0" />
+                                            <GradientStop Color="#C4637D" Offset="0.55" />
+                                            <GradientStop Color="#D9A24E" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                                <TextBlock Text="MVPClub出品 基于PCL，各项功能正常版本！" Margin="0,10,0,0" FontSize="14" TextWrapping="Wrap"
+                                           Foreground="{StaticResource ColorBrushTextSecondary}" />
+                                <local:MyTextButton x:Name="BtnWelcomeRepo" Margin="0,8,0,0" FontSize="13"
+                                                    Text="项目地址：https://github.com/MVPS680/Cosy-Craft-Launcher" />
+                            </StackPanel>
                             <WrapPanel VerticalAlignment="Bottom">
                                 <local:MyButton x:Name="BtnWelcomeDownload" Text="下载游戏" Height="38" MinWidth="116" Padding="18,0" Margin="0,0,10,10" ColorType="Highlight" />
                                 <local:MyButton x:Name="BtnWelcomePack" Text="安装整合包" Height="38" MinWidth="116" Padding="18,0" Margin="0,0,10,10" />

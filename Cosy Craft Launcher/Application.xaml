@@ -28,7 +28,7 @@
             <SolidColorBrush x:Key="ColorBrush7">#F3E8F0</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrush8">#F9F3F7</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrushBg0">#E17D85</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrushBg1">#BEFDEBEC</SolidColorBrush>
+            <SolidColorBrush x:Key="ColorBrushBg1">#8CFDEBEC</SolidColorBrush>
             <Color x:Key="ColorObject1">#382E42</Color>
             <Color x:Key="ColorObject2">#963D63</Color>
             <Color x:Key="ColorObject3">#AF5276</Color>
@@ -63,21 +63,22 @@
             <SolidColorBrush x:Key="ColorBrushWhite" Color="#ffffff" />
             <SolidColorBrush x:Key="ColorBrushTransparent" Color="Transparent" />
             <SolidColorBrush x:Key="ColorBrushSemiTransparent">#01FEF3F4</SolidColorBrush>
-            <SolidColorBrush x:Key="ColorBrushBackgroundTransparentSidebar" Color="#DDFAF8FC" />
+            <SolidColorBrush x:Key="ColorBrushBackgroundTransparentSidebar" Color="#99FAF8FC" />
 
             <!-- 设计令牌（Surface / Border / Text / Shadow / 芙兰点缀） -->
-            <SolidColorBrush x:Key="ColorBrushSurface" Color="#FFFFFF" />
+            <!-- 磨砂玻璃：表面统一降低不透明度，让模糊的动态背景透出来 -->
+            <SolidColorBrush x:Key="ColorBrushSurface" Color="#D9FFFFFF" />
             <LinearGradientBrush x:Key="ColorBrushCardSurface" StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#FAFFFFFF" Offset="0" />
-                <GradientStop Color="#F5FCFAFD" Offset="0.55" />
-                <GradientStop Color="#F5FCF7F8" Offset="1" />
+                <GradientStop Color="#BFFFFFFF" Offset="0" />
+                <GradientStop Color="#B8FCFAFD" Offset="0.55" />
+                <GradientStop Color="#B2FCF7F8" Offset="1" />
             </LinearGradientBrush>
-            <SolidColorBrush x:Key="ColorBrushSurfaceSoft" Color="#F7F3F8" />
-            <SolidColorBrush x:Key="ColorBrushCardBorder" Color="#E7DEEA" />
-            <SolidColorBrush x:Key="ColorBrushSoftBorder" Color="#DCD2E1" />
-            <SolidColorBrush x:Key="ColorBrushHoverFill" Color="#F3EAF2" />
-            <SolidColorBrush x:Key="ColorBrushAccentSoft" Color="#F0E3EE" />
-            <SolidColorBrush x:Key="ColorBrushAccentBorder" Color="#DCC1D4" />
+            <SolidColorBrush x:Key="ColorBrushSurfaceSoft" Color="#B8F7F3F8" />
+            <SolidColorBrush x:Key="ColorBrushCardBorder" Color="#99E7DEEA" />
+            <SolidColorBrush x:Key="ColorBrushSoftBorder" Color="#A6DCD2E1" />
+            <SolidColorBrush x:Key="ColorBrushHoverFill" Color="#A6F3EAF2" />
+            <SolidColorBrush x:Key="ColorBrushAccentSoft" Color="#B3F0E3EE" />
+            <SolidColorBrush x:Key="ColorBrushAccentBorder" Color="#B3DCC1D4" />
             <SolidColorBrush x:Key="ColorBrushTextSecondary" Color="#706578" />
             <SolidColorBrush x:Key="ColorBrushTextTertiary" Color="#827889" />
             <SolidColorBrush x:Key="ColorBrushRedBorder" Color="#F0AEAB" />
@@ -91,7 +92,7 @@
             </LinearGradientBrush>
             <!-- 金色点缀：呼应芙兰的金发与星星 -->
             <SolidColorBrush x:Key="ColorBrushGold" Color="#997128" />
-            <SolidColorBrush x:Key="ColorBrushGoldSoft" Color="#FBF3E3" />
+            <SolidColorBrush x:Key="ColorBrushGoldSoft" Color="#B3FBF3E3" />
             <SolidColorBrush x:Key="ColorBrushGoldBorder" Color="#E9CF86" />
             <!-- 水晶翼七色：标题栏细线与水晶装饰 -->
             <SolidColorBrush x:Key="ColorBrushCrystal1" Color="#E04555" />

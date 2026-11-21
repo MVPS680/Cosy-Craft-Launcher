@@ -13,6 +13,12 @@ Public Class PageLaunchRight
         AddHandler BtnWelcomeDownload.Click, Sub(sender, e) FrmMain.PageChange(FormMain.PageType.Download, FormMain.PageSubType.DownloadInstall)
         AddHandler BtnWelcomePack.Click, Sub(sender, e) FrmMain.PageChange(FormMain.PageType.Download, FormMain.PageSubType.DownloadPack)
         AddHandler BtnWelcomeSetup.Click, Sub(sender, e) FrmMain.PageChange(FormMain.PageType.Setup)
+        AddHandler BtnWelcomeRepo.Click,
+            Sub(sender, e)
+                If MyMsgBox("是否前往 GitHub 仓库？" & vbCrLf & "可能会因网络问题无法加载。", "打开项目地址", "前往", "取消") = 1 Then
+                    OpenWebsite("https://github.com/MVPS680/Cosy-Craft-Launcher")
+                End If
+            End Sub
     End Sub
 
 #Region "主页"
@@ -38,7 +44,7 @@ Public Class PageLaunchRight
             Case 1
                 '加载本地文件
                 Logger.Info("主页自定义数据来源：本地文件")
-                Content = FileUtils.TryReadAsString(Paths.Base & "PCL\Custom.xaml")
+                Content = FileUtils.TryReadAsString(PathData & "Custom.xaml")
             Case 2
                 '联网下载
                 Url = Settings.Get(Of String)("UiCustomNet")

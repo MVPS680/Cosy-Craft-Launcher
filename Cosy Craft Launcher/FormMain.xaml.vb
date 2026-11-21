@@ -1,5 +1,6 @@
-﻿Imports System.ComponentModel
+Imports System.ComponentModel
 Imports System.Windows.Interop
+Imports System.Windows.Media.Animation
 
 Public Class FormMain
 
@@ -345,6 +346,7 @@ Public Class FormMain
         Handle = New WindowInteropHelper(Me).Handle
         '读取设置
         UpdateBackgroundAndTitleBar()
+        InitVideoBackground()
         PageSetupUI.HiddenRefresh()
         PageSetupUI.BackgroundRefresh(False, True)
         MusicRefreshPlay(False, True)
@@ -435,20 +437,154 @@ Public Class FormMain
             End Try
             '清理自动更新文件
             Try
-                FileUtils.Delete(Paths.Base & "PCL\Cosy Craft Launcher.exe")
+                FileUtils.Delete(PathData & "Cosy Craft Launcher.exe")
             Catch ex As Exception
                 Logger.Warn(ex, "清理自动更新文件失败")
             End Try
             '上报
             Telemetry("启动")
-            '开源版本提示
-            If VersionBranchMain = "OpenSource" Then
-                MyMsgBox($"该版本中无法使用以下特性：{vbCrLf}- CurseForge API 调用：需要自行申请 API Key，然后添加到 ModSecret.vb 的开头{vbCrLf}- 正版登录：需要自行向微软申请 Client ID，然后添加到 ModSecret.vb 的开头{vbCrLf}- 更新与联网通知：避免滥用隐患{vbCrLf}- 主题切换：这是需要赞助解锁的纪念性质的功能，别让赞助者太伤心啦……{vbCrLf}- 百宝箱：开发早期往里面塞了些开发工具，整理起来太麻烦了……", "开源版本说明")
-            End If
         End Sub, "初始化", ThreadPriority.Lowest)
 
         Logger.Info($"第三阶段加载用时：{GetTimeMs() - ApplicationStartTick} ms")
     End Sub
+
+#Region "动态背景视频"
+
+    '视频源尺寸，与 Resources\BackgroundVideo.mp4 保持一致
+    Private Const VideoWidth As Integer = 1280
+    Private Const VideoHeight As Integer = 720
+    '视频层不透明度
+    Private Const VideoAlpha As Double = 0.68
+    '提前开始切换的时长；预热 + 淡化都要在这个提前量内完成，确保旧播放器不会进入播放结束状态
+    Private Const VideoFadeMs As Integer = 250
+    Private Const VideoWarmUpMs As Integer = 250
+    Private Const VideoLoopLeadMs As Integer = 800
+    '双播放器交替循环：切换时由已经就位的另一个播放器覆盖过来，因此看不到重播黑屏
+    Private VideoPlayerA As MediaPlayer
+    Private VideoPlayerB As MediaPlayer
+    Private VideoActiveIsA As Boolean = True
+    Private VideoFading As Boolean
+    Private VideoLoopTimer As Windows.Threading.DispatcherTimer
+
+    ''' <summary>
+    ''' 初始化并播放半透明的全局动态背景视频。
+    ''' </summary>
+    Private Sub InitVideoBackground()
+        Try
+            Dim VideoPath As String = PathTemp & "Cache\BackgroundVideo.mp4"
+            DirectoryUtils.Create(PathTemp & "Cache")
+            ExtractResources(VideoPath, "BackgroundVideo")
+            Dim VideoUri As New Uri(VideoPath, UriKind.Absolute)
+            VideoPlayerA = InitVideoPlayer(VideoUri, VideoBackA, False)
+            VideoPlayerB = InitVideoPlayer(VideoUri, VideoBackB, True)
+            VideoPlayerA.Play()
+            VideoBackA.Opacity = VideoAlpha
+            VideoBackB.Opacity = 0
+            '轮询播放进度，在结尾前交叉淡化到另一个播放器
+            VideoLoopTimer = New Windows.Threading.DispatcherTimer With {.Interval = TimeSpan.FromMilliseconds(50)}
+            AddHandler VideoLoopTimer.Tick, AddressOf VideoLoopTick
+            VideoLoopTimer.Start()
+            Logger.Info("动态背景视频已开始播放")
+        Catch ex As Exception
+            Logger.Warn(ex, "初始化动态背景视频失败")
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' 创建一个绘制到指定矩形的背景视频播放器。
+    ''' ScrubbingEnabled 让暂停时也能显示首帧，从而在切换时备好画面而不是黑屏。
+    ''' </summary>
+    Private Function InitVideoPlayer(VideoUri As Uri, Target As Shapes.Rectangle, IsStandby As Boolean) As MediaPlayer
+        Dim Player As New MediaPlayer With {.IsMuted = True, .Volume = 0, .ScrubbingEnabled = True}
+        AddHandler Player.MediaFailed, Sub(sender, e) Logger.Warn(e.ErrorException, "播放动态背景视频失败")
+        AddHandler Player.MediaEnded, Sub(sender, e)
+                                          '兜底：若交叉淡化没有赶上，仍然从头重播
+                                          Player.Position = TimeSpan.Zero
+                                          Player.Play()
+                                      End Sub
+        If IsStandby Then
+            '备用播放器预先定位到开头附近，让它在暂停状态下也持有画面，而不是等着解码出首帧
+            AddHandler Player.MediaOpened, Sub() Player.Position = TimeSpan.FromMilliseconds(40)
+        End If
+        Player.Open(VideoUri)
+        '使用 VideoDrawing 绘制，避免 MediaElement 在透明窗口中出现黑屏
+        Dim Source As New VideoDrawing With {
+            .Player = Player,
+            .Rect = New Rect(0, 0, VideoWidth, VideoHeight)
+        }
+        Target.Fill = New DrawingBrush(Source) With {
+            .Stretch = Stretch.UniformToFill,
+            .AlignmentX = AlignmentX.Center,
+            .AlignmentY = AlignmentY.Center,
+            .Viewbox = New Rect(0, 0, VideoWidth, VideoHeight),
+            .ViewboxUnits = BrushMappingMode.Absolute,
+            .TileMode = TileMode.None
+        }
+        Return Player
+    End Function
+
+    Private ReadOnly Property VideoActivePlayer As MediaPlayer
+        Get
+            Return If(VideoActiveIsA, VideoPlayerA, VideoPlayerB)
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' 轮询播放进度，在临近结尾时启动交叉淡化。
+    ''' </summary>
+    Private Sub VideoLoopTick(sender As Object, e As EventArgs)
+        If VideoFading OrElse VideoActivePlayer Is Nothing Then Return
+        If Not VideoActivePlayer.NaturalDuration.HasTimeSpan Then Return
+        If VideoActivePlayer.Position >= VideoActivePlayer.NaturalDuration.TimeSpan - TimeSpan.FromMilliseconds(VideoLoopLeadMs) Then StartVideoCrossFade()
+    End Sub
+
+    ''' <summary>
+    ''' 从当前播放器交叉淡化到备用播放器；旧播放器完全透明后才暂停并回到开头，所以不会看到黑屏。
+    ''' </summary>
+    Private Sub StartVideoCrossFade()
+        VideoFading = True
+        Dim FromRect As Shapes.Rectangle = If(VideoActiveIsA, VideoBackA, VideoBackB)
+        Dim ToRect As Shapes.Rectangle = If(VideoActiveIsA, VideoBackB, VideoBackA)
+        Dim FromPlayer As MediaPlayer = VideoActivePlayer
+        Dim ToPlayer As MediaPlayer = If(VideoActiveIsA, VideoPlayerB, VideoPlayerA)
+        '让备用播放器先在不可见状态下播放一小段，等画面解码稳定后再交叉淡化，避免露出黑帧
+        ToPlayer.Play()
+        FromRect.Opacity = VideoAlpha
+        ToRect.Opacity = 0
+        '两个方向同时淡化：新画面淡入、旧画面淡出，总不透明度保持不变，因此不会有明暗起伏
+        Dim BeginTime As TimeSpan = TimeSpan.FromMilliseconds(VideoWarmUpMs)
+        Dim Duration As TimeSpan = TimeSpan.FromMilliseconds(VideoFadeMs)
+        Dim FadeIn As New DoubleAnimation(0, VideoAlpha, Duration) With {.BeginTime = BeginTime}
+        Dim FadeOut As New DoubleAnimation(VideoAlpha, 0, Duration) With {.BeginTime = BeginTime}
+        AddHandler FadeIn.Completed, Sub()
+                                         '旧播放器已完全透明，此时暂停并回到开头，显示首帧等待下次切换
+                                         FromPlayer.Pause()
+                                         FromPlayer.Position = TimeSpan.Zero
+                                         FromRect.Opacity = 0
+                                         ToRect.Opacity = VideoAlpha
+                                         FromRect.BeginAnimation(UIElement.OpacityProperty, Nothing)
+                                         ToRect.BeginAnimation(UIElement.OpacityProperty, Nothing)
+                                         VideoActiveIsA = Not VideoActiveIsA
+                                         VideoFading = False
+                                     End Sub
+        FromRect.BeginAnimation(UIElement.OpacityProperty, FadeOut)
+        ToRect.BeginAnimation(UIElement.OpacityProperty, FadeIn)
+    End Sub
+
+    '最小化时暂停播放以降低占用
+    Private Sub FormMain_StateChanged(sender As Object, e As EventArgs) Handles Me.StateChanged
+        If VideoPlayerA Is Nothing Then Return
+        If WindowState = WindowState.Minimized Then
+            VideoPlayerA.Pause()
+            VideoPlayerB?.Pause()
+            VideoLoopTimer?.Stop()
+        Else
+            VideoActivePlayer?.Play()
+            VideoLoopTimer?.Start()
+        End If
+    End Sub
+
+#End Region
     '根据打开次数触发的事件
     Private Sub RunCountSub()
         Settings.Set("SystemCount", Settings.Get(Of Integer)("SystemCount") + 1)
@@ -505,8 +641,8 @@ Public Class FormMain
                      "多谢各位的理解啦！", "重新解锁提醒")
         End If
         '移动自定义皮肤
-        If LastVersionCode <= 161 AndAlso FileUtils.Exists(Paths.Base & "PCL\CustomSkin.png") AndAlso Not FileUtils.Exists(Paths.AppDataThenName & "CustomSkin.png") Then
-            FileUtils.Copy(Paths.Base & "PCL\CustomSkin.png", Paths.AppDataThenName & "CustomSkin.png")
+        If LastVersionCode <= 161 AndAlso FileUtils.Exists(PathData & "CustomSkin.png") AndAlso Not FileUtils.Exists(Paths.AppDataThenName & "CustomSkin.png") Then
+            FileUtils.Copy(PathData & "CustomSkin.png", Paths.AppDataThenName & "CustomSkin.png")
             Logger.Info("已移动离线自定义皮肤 (162)")
         End If
         If LastVersionCode <= 263 AndAlso FileUtils.Exists(PathTemp & "CustomSkin.png") AndAlso Not FileUtils.Exists(Paths.AppDataThenName & "CustomSkin.png") Then
@@ -580,6 +716,12 @@ Public Class FormMain
         RunInUiWait(
         Sub()
             IsHitTestVisible = False
+            '停止动态背景视频并释放媒体文件
+            VideoLoopTimer?.Stop()
+            VideoPlayerA?.Close()
+            VideoPlayerB?.Close()
+            VideoBackA.Fill = Nothing
+            VideoBackB.Fill = Nothing
             If PanBack.RenderTransform Is Nothing Then
                 Dim TransformPos As New TranslateTransform(0, 0)
                 Dim TransformRotate As New RotateTransform(0)
@@ -619,7 +761,7 @@ Public Class FormMain
                 FeedbackInfo()
                 Logger.Info("请在 https://github.com/MVPS680/Cosy-Craft-Launcher/issues 提交错误报告，以便于作者解决此问题！")
                 IsLogShown = True
-                StartProcess(Paths.Base & "PCL\Log1.txt")
+                StartProcess(PathData & "Log1.txt")
             End If
             Thread.Sleep(500) '防止 Cosy Craft Launcher 在记事本打开前就被掐掉
         End If
@@ -747,8 +889,9 @@ Public Class FormMain
                     FrmSetupUI.PanLogoChange.Visibility = Visibility.Collapsed
                 End If
             Case 1 '默认
-                ShapeTitleLogo.Visibility = Visibility.Visible
-                LabTitleLogo.Visibility = Visibility.Collapsed
+                '标题栏左上角显示启动器名称
+                ShapeTitleLogo.Visibility = Visibility.Collapsed
+                LabTitleLogo.Visibility = Visibility.Visible
                 ImageTitleLogo.Visibility = Visibility.Collapsed
                 If Not IsNothing(FrmSetupUI) Then
                     FrmSetupUI.CheckLogoLeft.Visibility = Visibility.Collapsed
@@ -774,15 +917,17 @@ Public Class FormMain
                     FrmSetupUI.PanLogoChange.Visibility = Visibility.Visible
                 End If
                 Try
-                    ImageTitleLogo.Source = Paths.Base & "PCL\Logo.png"
+                    ImageTitleLogo.Source = PathData & "Logo.png"
                 Catch ex As Exception
                     ImageTitleLogo.Source = Nothing
                     Logger.Error(ex, "显示标题栏图片失败", LogBehavior.Alert)
                 End Try
         End Select
         FrmSetupUI?.CardLogo.TriggerForceResize()
-        '标题栏文本
-        LabTitleLogo.Text = Settings.Get(Of String)("UiLogoText")
+        '标题栏文本：默认模式固定显示启动器名称，文本模式使用用户设置
+        LabTitleLogo.Text = If(Settings.Get(Of Integer)("UiLogoType") = 2,
+                               Settings.Get(Of String)("UiLogoText"),
+                               "Cosy Craft Launcher")
         '标题栏文本是否居左
         PanTitleMain.ColumnDefinitions(0).Width = New GridLength(If(Settings.Get(Of Boolean)("UiLogoLeft") AndAlso Settings.Get(Of Integer)("UiLogoType") = 0, 0, 1), GridUnitType.Star)
     End Sub
@@ -1045,12 +1190,12 @@ Public Class FormMain
             Dim Extension As String = PathUtils.GetExtension(FilePath)
             If Extension = "xaml" Then
                 Logger.Info("文件后缀为 XAML，作为主页加载")
-                If FileUtils.Exists(Paths.Base & "PCL\Custom.xaml") Then
+                If FileUtils.Exists(PathData & "Custom.xaml") Then
                     If MyMsgBox("已存在一个主页文件，是否要将它覆盖？", "覆盖确认", "覆盖", "取消") = 2 Then
                         Return
                     End If
                 End If
-                FileUtils.Copy(FilePath, Paths.Base & "PCL\Custom.xaml")
+                FileUtils.Copy(FilePath, PathData & "Custom.xaml")
                 RunInUi(
                 Sub()
                     Settings.Set("UiCustomType", 1)

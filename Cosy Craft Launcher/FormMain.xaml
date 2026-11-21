@@ -96,15 +96,20 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <local:ScarletBackdrop x:Name="ScarletAmbient" Mode="Ambient" Grid.Row="1" />
+                <!-- 半透明全局动态背景：双播放器交替，切换时交叉淡化以避免重播黑屏 -->
+                <Grid x:Name="VideoBackLayer" Grid.Row="1" IsHitTestVisible="False">
+                    <Rectangle x:Name="VideoBackA" Opacity="0.68" />
+                    <Rectangle x:Name="VideoBackB" Opacity="0" />
+                </Grid>
                 <Canvas x:Name="ImgBack" IsHitTestVisible="False" Grid.Row="1" RenderOptions.BitmapScalingMode="LowQuality"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                 <Grid x:Name="PanTitle" Height="54">
                     <Grid.Background>
-                        <LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
+                        <LinearGradientBrush EndPoint="1,0" StartPoint="0,0" Opacity="0.8">
                             <GradientStop Color="{StaticResource ColorObject2}" Offset="0"/>
                         </LinearGradientBrush>
                     </Grid.Background>
-                    <local:ScarletBackdrop x:Name="ScarletTitle" Mode="Title" />
+                    <local:ScarletBackdrop x:Name="ScarletTitle" Mode="Title" Opacity="0.35" />
                     <local:MyImage x:Name="ImgTitle" IsHitTestVisible="False" Stretch="UniformToFill" IsEnabled="False" RenderOptions.BitmapScalingMode="LowQuality" />
                     <Rectangle IsHitTestVisible="False" SnapsToDevicePixels="False">
                         <Rectangle.Fill>
@@ -129,8 +134,8 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <Path x:Name="ShapeTitleLogo" Data="M26,29 v-25 h6 a7,7 180 0 1 0,14 h-6 M62.5,6.5 a10,11.5 180 1 0 0,18 M71,2.5 v24.5 h13.5" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="19,15.5,0,15.5" Stretch="fill" Stroke="White" StrokeThickness="2.2" Width="39" />
-                        <TextBlock x:Name="LabTitleLogo" Visibility="Collapsed" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="18,0,0,0" Foreground="White" FontSize="17" VerticalAlignment="Center" />
+                        <Path x:Name="ShapeTitleLogo" Visibility="Collapsed" Data="M26,29 v-25 h6 a7,7 180 0 1 0,14 h-6 M62.5,6.5 a10,11.5 180 1 0 0,18 M71,2.5 v24.5 h13.5" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="19,15.5,0,15.5" Stretch="fill" Stroke="White" StrokeThickness="2.2" Width="39" />
+                        <TextBlock x:Name="LabTitleLogo" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="18,0,0,0" Foreground="White" FontSize="17" VerticalAlignment="Center" Text="Cosy Craft Launcher" />
                         <local:MyImage x:Name="ImageTitleLogo" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="7" VerticalAlignment="Center" Visibility="Collapsed" />
                         <StackPanel Grid.Column="1" x:Name="PanTitleSelect" HorizontalAlignment="Left" Height="31" VerticalAlignment="Center" Orientation="Horizontal" Margin="13,0">
                             <local:MyRadioButton x:Name="BtnTitleSelect0" Text="启动" Tag="0" Margin="5,0" Checked="True" Padding="2,0"

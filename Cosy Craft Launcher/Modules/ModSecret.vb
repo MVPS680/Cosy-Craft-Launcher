@@ -3,13 +3,15 @@
 Friend Module ModSecret
 
     '标注启动器的不同分支，仅用于替换标记
-    Public Const VersionBranchMain As String = "OpenSource"
+    Public Const VersionBranchMain As String = "Main"
     '在开源版的注册表与常规版的注册表隔离，以防数据冲突
     Public Const RegFolder As String = "PCLDebug"
     '用于微软登录的 ClientId
-    Public OAuthClientId As String = If(Environment.GetEnvironmentVariable("COSY_MS_CLIENT_ID") <> "", Environment.GetEnvironmentVariable("COSY_MS_CLIENT_ID"), If(Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID"), ""))
+    Public OAuthClientId As String = If(Environment.GetEnvironmentVariable("COSY_MS_CLIENT_ID") <> "", Environment.GetEnvironmentVariable("COSY_MS_CLIENT_ID"),
+        If(Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID") <> "", Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID"), "fe72edc2-3a6f-4280-90e8-e2beb64ce7e1"))
     'CurseForge API Key
-    Public CurseForgeAPIKey As String = If(Environment.GetEnvironmentVariable("COSY_CURSEFORGE_API_KEY") <> "", Environment.GetEnvironmentVariable("COSY_CURSEFORGE_API_KEY"), If(Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY"), ""))
+    Public CurseForgeAPIKey As String = If(Environment.GetEnvironmentVariable("COSY_CURSEFORGE_API_KEY") <> "", Environment.GetEnvironmentVariable("COSY_CURSEFORGE_API_KEY"),
+        If(Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY") <> "", Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY"), "$2a$10$7WWV1WELcwX8Xp7d68MHs.5grTyZVa6SynyeSyMh1rsE89nIa09zO"))
     '用于匿名数据收集的腾讯云日志服务上报 URL，形如 https://{region}.cls.tencentcs.com/track?topic_id={topic_id}
     Public Const ClsBaseUrl As String = ""
 
@@ -68,8 +70,42 @@ Friend Module ModSecret
 
     Public Sub ThemeRefresh(Optional NewTheme As Integer = -1)
         Try
-            If ThemeNow = NewTheme AndAlso NewTheme >= 0 Then Return
-            If NewTheme >= 0 Then ThemeNow = NewTheme
+            If NewTheme < 0 Then NewTheme = Settings.Get(Of Integer)("UiLauncherTheme")
+            '主题 12、14 需要允许重复刷新（随机色 / 自定义滑块）
+            If ThemeNow = NewTheme AndAlso NewTheme <> 12 AndAlso NewTheme <> 14 Then Return
+            If Not ThemeCheckOne(NewTheme) Then Return
+            ThemeNow = NewTheme
+
+            '默认保持现有绯红色板；其余主题仅围绕该色板做有限的色相偏移
+            ColorHue = 355
+            ColorSat = 80
+            ColorLightAdjust = -10
+            ColorHueTopbarDelta = New Integer() {-9, 0, -3}
+            Select Case NewTheme
+                Case 1 : ColorHue = 330
+                Case 2 : ColorHue = 40
+                Case 3 : ColorHue = 25
+                Case 4 : ColorHue = 350 : ColorLightAdjust = -12
+                Case 5 : ColorSat = 0 : ColorLightAdjust = -18
+                Case 6 : ColorHue = 330
+                Case 7 : ColorHue = 290
+                Case 8 : ColorHue = 40
+                Case 9 : ColorHue = 20
+                Case 10 : ColorHue = 355
+                Case 11 : ColorHue = 220
+                Case 12
+                    ColorHue = RandomInteger(0, 359)
+                    ColorSat = RandomInteger(70, 90)
+                    ColorLightAdjust = RandomInteger(-14, -6)
+                Case 13
+                    ColorHue = RandomInteger(0, 359)
+                    ColorSat = RandomInteger(70, 95)
+                Case 14
+                    ColorHue = Settings.Get(Of Integer)("UiLauncherHue")
+                    ColorSat = Settings.Get(Of Integer)("UiLauncherSat")
+                    ColorLightAdjust = Settings.Get(Of Integer)("UiLauncherLight") - 20
+                    ColorHueTopbarDelta = Settings.Get(Of Integer)("UiLauncherDelta")
+            End Select
 
             Color1 = New MyColor(56,46,66)
             Color2 = New MyColor(150,61,99)
@@ -79,8 +115,14 @@ Friend Module ModSecret
             Color6 = New MyColor(234,211,224)
             Color7 = New MyColor(243,232,240)
             Color8 = New MyColor(249,243,247)
+            '强调色做有限的色相偏移，卡片表面（Color6-8）保持现有绯红色板
+            If NewTheme <> 0 Then
+                Color2 = New MyColor().FromHSL2(ColorHue, ColorSat, 43 + ColorLightAdjust)
+                Color3 = New MyColor().FromHSL2(ColorHue, ColorSat, 55 + ColorLightAdjust)
+                Color4 = New MyColor().FromHSL2(ColorHue, ColorSat, 67 + ColorLightAdjust)
+            End If
             ColorBg0 = Color4 * 0.4 + Color5 * 0.4 + ColorGray4 * 0.2
-            ColorBg1 = New MyColor(190, Color7)
+            ColorBg1 = New MyColor(140, Color7)
 
             ColorSemiTransparent = New MyColor(1, Color8)
             Application.Current.Resources("ColorBrush1") = New SolidColorBrush(Color1)
@@ -113,13 +155,14 @@ Friend Module ModSecret
         RunInUi(
         Sub()
             If FrmMain Is Nothing OrElse Not FrmMain.IsLoaded Then Return
-            '顶部条背景
+            '顶部条背景：半透明磨砂玻璃，让动态背景透上来
+            Const TopbarAlpha As Double = 180
             Dim Brush = New LinearGradientBrush With {.EndPoint = New Point(1, 0), .StartPoint = New Point(0, 0)}
             Dim Deltas = ColorHueTopbarDelta.Switch(Function(d) New Integer() {-d, 0, d}, Function(d) d)
-            Brush.GradientStops.Add(New GradientStop With {.Offset = -0.05, .Color = New MyColor().FromHSL2(ColorHue + Deltas(0), ColorSat * 0.8, 39 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.32, .Color = New MyColor().FromHSL2(ColorHue + Deltas(1), ColorSat * 0.9, 48 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.72, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.8, 44 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 1.05, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.75, 38 + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = -0.05, .Color = New MyColor(TopbarAlpha, New MyColor().FromHSL2(ColorHue + Deltas(0), ColorSat * 0.8, 39 + ColorLightAdjust))})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.32, .Color = New MyColor(TopbarAlpha, New MyColor().FromHSL2(ColorHue + Deltas(1), ColorSat * 0.9, 48 + ColorLightAdjust))})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.72, .Color = New MyColor(TopbarAlpha, New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.8, 44 + ColorLightAdjust))})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 1.05, .Color = New MyColor(TopbarAlpha, New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat * 0.75, 38 + ColorLightAdjust))})
             FrmMain.PanTitle.Background = Brush
             FrmMain.PanTitle.Background.Freeze()
             FrmMain.ScarletAmbient.Visibility = If(Settings.Get(Of Boolean)("UiBackgroundColorful"), Visibility.Visible, Visibility.Collapsed)
@@ -137,11 +180,24 @@ Friend Module ModSecret
         End Sub)
     End Sub
     Friend Sub ThemeCheckAll(EffectSetup As Boolean)
+        Try
+            If FrmSetupUI Is Nothing Then Return
+            Dim Themes() As MyRadioBox = {FrmSetupUI.RadioLauncherTheme5, FrmSetupUI.RadioLauncherTheme6,
+                FrmSetupUI.RadioLauncherTheme7, FrmSetupUI.RadioLauncherTheme8, FrmSetupUI.RadioLauncherTheme9,
+                FrmSetupUI.RadioLauncherTheme10, FrmSetupUI.RadioLauncherTheme11, FrmSetupUI.RadioLauncherTheme12,
+                FrmSetupUI.RadioLauncherTheme13, FrmSetupUI.RadioLauncherTheme14}
+            For Each Theme In Themes
+                If Theme IsNot Nothing Then Theme.IsEnabled = True
+            Next
+        Catch ex As Exception
+            Logger.Warn(ex, "刷新主题解锁状态失败")
+        End Try
     End Sub
     Friend Function ThemeCheckOne(Id As Integer) As Boolean
         Return True
     End Function
     Friend Function ThemeUnlock(Id As Integer, Optional ShowDoubleHint As Boolean = True, Optional UnlockHint As String = Nothing) As Boolean
+        '所有主题已直接开放，不再需要解锁流程
         Return False
     End Function
 

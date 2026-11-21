@@ -37,18 +37,18 @@ Public Class MyHint
     Private Sub UpdateUI() Handles Me.Loaded
         Select Case Theme
             Case Themes.Blue
-                Background = New MyColor("#F7F3F8")
-                BorderBrush = New MyColor("#DED2E3")
+                Background = New MyColor("#D9F7F3F8")
+                BorderBrush = New MyColor("#B3DED2E3")
                 LabText.Foreground = New MyColor("#65446E")
                 BtnClose.Foreground = New MyColor("#65446E")
             Case Themes.Red
-                Background = New MyColor("#FDECEC")
-                BorderBrush = New MyColor("#E88C8C")
+                Background = New MyColor("#D9FDECEC")
+                BorderBrush = New MyColor("#B3E88C8C")
                 LabText.Foreground = New MyColor("#A50E16")
                 BtnClose.Foreground = New MyColor("#A50E16")
             Case Themes.Yellow
-                Background = New MyColor("#FDF1E3")
-                BorderBrush = New MyColor("#EFC08A")
+                Background = New MyColor("#D9FDF1E3")
+                BorderBrush = New MyColor("#B3EFC08A")
                 LabText.Foreground = New MyColor("#8D570D")
                 BtnClose.Foreground = New MyColor("#8D570D")
         End Select
