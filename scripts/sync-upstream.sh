@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-# 同步上游 Meloong-Git/PCL → 本仓库（MY-PCL），按需重编并发布修复版。
+﻿#!/usr/bin/env bash
+# 同步上游 Meloong-Git/PCL → 本仓库（Cosy Craft Launcher），按需重编并发布修复版。
 #
 # 用法：
 #   scripts/sync-upstream.sh              # fetch + merge，有冲突就停下
@@ -44,10 +44,10 @@ say() { printf '\n\033[36m==> %s\033[0m\n' "$*"; }
 warn() { printf '\033[33m注意：%s\033[0m\n' "$*"; }
 die() { printf '\033[31m错误：%s\033[0m\n' "$*" >&2; exit 1; }
 
-MODSECRET="Plain Craft Launcher 2/Modules/ModSecret.vb"
-FORM_MAIN="Plain Craft Launcher 2/FormMain.xaml.vb"
-LAUNCH="Plain Craft Launcher 2/Modules/Minecraft/ModLaunch.vb"
-MODBASE="Plain Craft Launcher 2/Modules/Base/ModBase.vb"
+MODSECRET="Cosy Craft Launcher/Modules/ModSecret.vb"
+FORM_MAIN="Cosy Craft Launcher/FormMain.xaml.vb"
+LAUNCH="Cosy Craft Launcher/Modules/Minecraft/ModLaunch.vb"
+MODBASE="Cosy Craft Launcher/Modules/Base/ModBase.vb"
 
 # ---------- 1. 拉取与合并 ----------
 say "拉取 $UPSTREAM_REMOTE 与 $FORK_REMOTE"
@@ -70,7 +70,7 @@ if [ "$BEHIND" -gt 0 ]; then
   * ModSecret.vb:18                RestrictMcDownload As Boolean = False
   * FormMain.xaml.vb               删掉「删除：……不再提供 MC 下载功能……」两条更新日志
   * ModLaunch.vb 的 403 分支        保留「Invalid app registration → 白名单」判断
-  * README.md                      保留「正版登录说明（第三方修复版）」一节
+  * README.md                      保留「微软账号登录」一节
 HINT
     exit 2
   fi
@@ -118,10 +118,10 @@ fi
 export MSBuildEnableWorkloadResolver=false
 
 say "编译 Release"
-"$MSBUILD" "Plain Craft Launcher 2/Plain Craft Launcher 2.vbproj" -p:Configuration=Release -nologo -v:m
+"$MSBUILD" "Cosy Craft Launcher/Cosy Craft Launcher.vbproj" -p:Configuration=Release -nologo -v:m
 
 EXE=""
-for candidate in "Plain Craft Launcher 2/bin/Plain Craft Launcher 2.exe" "Plain Craft Launcher 2/obj/Release/Plain Craft Launcher 2.exe"; do
+for candidate in "Cosy Craft Launcher/bin/Cosy Craft Launcher.exe" "Cosy Craft Launcher/obj/Release/Cosy Craft Launcher.exe"; do
   [ -f "$candidate" ] && EXE="$candidate" && break
 done
 [ -n "$EXE" ] || die "编译结束但找不到 exe"
@@ -133,16 +133,16 @@ say "产物：$EXE（$(stat -c%s "$EXE") 字节）"
 
 # ---------- 4. 打包 ----------
 STAGE="$DIST_DIR/_stage"
-ZIP="$DIST_DIR/PCL-${VERSION}-fix-win.zip"
+ZIP="$DIST_DIR/Cosy-Craft-Launcher-${VERSION}-fix-win.zip"
 rm -rf "$STAGE"
 mkdir -p "$STAGE" "$DIST_DIR"
-cp "$EXE" "$STAGE/Plain Craft Launcher 2.exe"
+cp "$EXE" "$STAGE/Cosy Craft Launcher.exe"
 cp LICENCE "$STAGE/LICENCE"
 cat > "$STAGE/修复说明.txt" <<EOF
-PCL ${VERSION} 第三方修复版（恢复 MC 下载）
+Cosy Craft Launcher ${VERSION} 第三方修复版（恢复 MC 下载）
 
 构建时间：$(date '+%Y-%m-%d %H:%M')
-来源：https://github.com/FLandreyu/MY-PCL （基于 Meloong-Git/PCL 的 ${VERSION} 源码）
+来源：https://github.com/MVPS680/Cosy-Craft-Launcher （基于 Meloong-Git/PCL 的 ${VERSION} 源码，作者：MVPClub / https://mvpclub.cc）
 
 本版改动：
 1. RestrictMcDownload 由 True 改为 False，恢复 Minecraft 版本列表、整合包与安装页下载入口。
@@ -150,7 +150,7 @@ PCL ${VERSION} 第三方修复版（恢复 MC 下载）
 3. 正版登录 403 时提示「应用未通过 Mojang 白名单审核」，不再误报为 IP 异常。
 
 已知限制：
-- 未注入官方 CI 的微软 OAuth 密钥：正版登录需自备已获 Mojang 白名单批准的 Entra 应用（环境变量 PCL_MS_CLIENT_ID）。
+- 未注入官方 CI 的微软 OAuth 密钥：正版登录需自备已获 Mojang 白名单批准的 Entra 应用（环境变量 COSY_MS_CLIENT_ID，兼容 PCL_MS_CLIENT_ID）。
 - 未注入 CurseForge API Key：CurseForge 搜索不可用。
 - exe 未签名，Windows SmartScreen 可能提示。
 
@@ -182,10 +182,10 @@ say "发布到 $SLUG，tag $TAG"
 
 git push "$FORK_REMOTE" main
 if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
-  git tag -f -a "$TAG" -m "PCL ${VERSION} 第三方修复版（恢复 MC 下载）"
+  git tag -f -a "$TAG" -m "Cosy Craft Launcher ${VERSION} 第三方修复版（恢复 MC 下载）"
   git push "$FORK_REMOTE" "refs/tags/$TAG" --force
 else
-  git tag -a "$TAG" -m "PCL ${VERSION} 第三方修复版（恢复 MC 下载）"
+  git tag -a "$TAG" -m "Cosy Craft Launcher ${VERSION} 第三方修复版（恢复 MC 下载）"
   git push "$FORK_REMOTE" "refs/tags/$TAG"
 fi
 
@@ -193,7 +193,7 @@ BODY_FILE=$(mktemp)
 export VERSION TAG
 python - "$BODY_FILE" <<'PY'
 import json, os, sys
-body = f"""## PCL {os.environ['VERSION']} 第三方修复版（恢复 MC 下载）
+body = f"""## Cosy Craft Launcher {os.environ['VERSION']} 第三方修复版（恢复 MC 下载）
 
 基于 [Meloong-Git/PCL](https://github.com/Meloong-Git/PCL) 的 {os.environ['VERSION']} 源码重新编译，**非官方发布**，与官方无关。
 
@@ -203,16 +203,16 @@ body = f"""## PCL {os.environ['VERSION']} 第三方修复版（恢复 MC 下载�
 - 正版登录 403 时提示「应用未通过 Mojang 白名单审核」，不再误报为 IP 异常
 
 ### 下载
-`PCL-{os.environ['VERSION']}-fix-win.zip` —— 内含 `Plain Craft Launcher 2.exe`、`LICENCE`、`修复说明.txt`
+`Cosy-Craft-Launcher-{os.environ['VERSION']}-fix-win.zip` —— 内含 `Cosy Craft Launcher.exe`、`LICENCE`、`修复说明.txt`
 
 ### 注意
-- 未注入官方 CI 密钥：正版登录需自备已获 Mojang 白名单批准的 Entra 应用（环境变量 `PCL_MS_CLIENT_ID`），详见 [README](https://github.com/FLandreyu/MY-PCL#正版登录说明第三方修复版)
+- 未注入官方 CI 密钥：正版登录需自备已获 Mojang 白名单批准的 Entra 应用（环境变量 `COSY_MS_CLIENT_ID`，兼容 `PCL_MS_CLIENT_ID`），详见 [README](https://github.com/MVPS680/Cosy-Craft-Launcher#微软账号登录)
 - 未注入 CurseForge API Key：CurseForge 搜索不可用
 - exe 未签名，Windows SmartScreen 可能提示
-- 隐私政策：[PRIVACY.md](https://github.com/FLandreyu/MY-PCL/blob/main/PRIVACY.md)；使用条款：[TERMS.md](https://github.com/FLandreyu/MY-PCL/blob/main/TERMS.md)
+- 隐私政策：[PRIVACY.md](https://github.com/MVPS680/Cosy-Craft-Launcher/blob/main/PRIVACY.md)；使用条款：[TERMS.md](https://github.com/MVPS680/Cosy-Craft-Launcher/blob/main/TERMS.md)
 """
 with open(sys.argv[1], "w", encoding="utf-8") as f:
-    json.dump({"tag_name": os.environ["TAG"], "name": f"PCL {os.environ['VERSION']} 第三方修复版（恢复 MC 下载）", "body": body, "draft": False, "prerelease": False}, f, ensure_ascii=False)
+    json.dump({"tag_name": os.environ["TAG"], "name": f"Cosy Craft Launcher {os.environ['VERSION']} 第三方修复版（恢复 MC 下载）", "body": body, "draft": False, "prerelease": False}, f, ensure_ascii=False)
 PY
 
 EXISTING=$(curl -s -H "Authorization: Bearer $TOKEN" "https://api.github.com/repos/$SLUG/releases/tags/$TAG")

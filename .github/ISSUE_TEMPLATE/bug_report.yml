@@ -1,5 +1,5 @@
 name: 问题反馈 / Bug report
-description: 反馈此第三方版本的使用问题
+description: 反馈 Cosy Craft Launcher 的使用问题
 title: "[Bug] "
 body:
   - type: markdown

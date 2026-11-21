@@ -41,7 +41,7 @@ $errorHint = [PCL.MyHint]::new()
 $errorHint.Theme = [PCL.MyHint+Themes]::Red
 Assert-UI ($infoHint.BorderBrush.ToString() -ne $errorHint.BorderBrush.ToString()) 'informational hints are distinct from errors'
 $hostWindow = [Windows.Window]::new()
-$hostWindow.Title = 'MY-PCL local UI regression host'
+$hostWindow.Title = 'Cosy Craft Launcher local UI regression host'
 $hostWindow.ShowInTaskbar = $false
 $hostWindow.Left = -16000
 $hostWindow.Top = -16000

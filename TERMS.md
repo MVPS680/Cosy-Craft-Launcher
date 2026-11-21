@@ -2,7 +2,7 @@
 
 ## 一、这是什么
 
-本项目是 [PCL](https://github.com/Meloong-Git/PCL) 的**第三方修复版**：基于 PCL 2.99.0.0 的公开源码，将 `Plain Craft Launcher 2/Modules/ModSecret.vb` 中的 `RestrictMcDownload` 改为 `False`，恢复 Minecraft 版本列表与整合包下载入口。它不是官方发布，与龙腾猫跃及 PCL 官方团队无关。
+Cosy Craft Launcher 是由 **MVPClub**（[mvpclub.cc](https://mvpclub.cc)）维护的第三方 Minecraft: Java Edition 启动器，基于 [PCL](https://github.com/Meloong-Git/PCL) 2.99.0.0 的公开源码独立编译，并恢复 Minecraft 版本列表与整合包下载入口。它不是 PCL 官方发布，与龙腾猫跃及 PCL 官方团队无关。
 
 ## 二、许可
 
@@ -13,7 +13,7 @@
 1. 本程序**仅供已购买 Minecraft: Java Edition 的用户**登录自己的正版账号使用。
 2. 不得用于破解、绕过正版验证、分发盗版游戏或账号。
 3. 不得将本程序用于商业售卖；本程序及其构建产物免费提供。
-4. 不得移除程序中的作者署名、许可文件与「第三方修复版」标识后冒充官方发布。
+4. 不得移除程序中的作者署名、许可文件与「第三方修改版」标识后冒充官方发布。
 
 ## 四、无担保
 
@@ -31,4 +31,4 @@
 
 条款如有变更会直接更新本文件并保留提交历史。继续使用即视为接受更新后的条款。
 
-最后更新：2026-11-01
+最后更新：2026-11-21

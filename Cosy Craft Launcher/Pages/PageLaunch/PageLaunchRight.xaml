@@ -1,0 +1,83 @@
+﻿<local:MyPageRight x:Class="PageLaunchRight"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:behaviors="clr-namespace:PCL.Controls.Behaviors"
+    xmlns:local="clr-namespace:PCL" PanScroll="PanBack">
+    <Grid>
+
+        <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
+            <StackPanel Name="PanMain" Margin="25,25,25,10" Grid.IsSharedSizeScope="True">
+                <local:MyHint x:Name="PanHint" RelativeSetup="HintSnapshot" Theme="Blue" CanClose="True" Margin="0,0,0,15"
+                              Text="快照版 Cosy Craft Launcher 包含尚未正式发布的测试功能，仅限赞助者自己使用。&#xa;请不要随意发给其他人，或是用来制作整合包哦！" />
+                <local:MyCard Margin="0,0,0,18" x:Name="PanWelcome" HasMouseAnimation="False">
+                    <Grid Margin="2">
+                        <local:ScarletBackdrop x:Name="ScarletHero" CornerRadius="12" />
+
+                        <StackPanel Margin="26,26,26,18">
+                            <Grid Height="84" Margin="0,0,0,16" IsHitTestVisible="False">
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,158,0">
+                                    <TextBlock Text="SCARLET" FontFamily="Georgia" FontSize="22" Foreground="#59416B" />
+                                    <TextBlock Text="月色轻落，虹彩相随" FontFamily="Segoe UI" FontSize="11" Margin="0,8,0,0" Foreground="#8A657B" />
+                                </StackPanel>
+                                <!-- 月牙与蝠翼属于蕾米莉亚，七色水晶属于芙兰朵露。 -->
+                                <Canvas Width="152" Height="64" HorizontalAlignment="Right" VerticalAlignment="Center" Opacity="0.65">
+                                    <Ellipse Width="58" Height="58" Canvas.Left="2" Canvas.Top="3" Fill="#187B62AD" />
+                                    <Path Canvas.Left="13" Canvas.Top="8" Fill="#77609D" Data="M 28,0 A 23,23 0 1 0 42,39 A 23,23 0 0 1 28,0 Z" />
+                                    <Path Canvas.Left="0" Canvas.Top="31" Fill="#664A82" Data="M 27,13 Q 14,-1 0,1 Q 7,8 6,19 Q 16,12 21,22 L 27,17 L 33,22 Q 38,12 48,19 Q 47,8 54,1 Q 40,-1 27,13 Z" />
+                                    <Path Stroke="#B18C70" StrokeThickness="1.3" Data="M 73,38 Q 109,5 148,31" />
+                                    <Path Fill="#C85B72" Data="M 77,31 L 81,38 L 77,47 L 73,38 Z" />
+                                    <Path Fill="#CE9652" Data="M 89,22 L 93,30 L 89,41 L 85,30 Z" />
+                                    <Path Fill="#B6AD55" Data="M 101,17 L 105,27 L 101,39 L 97,27 Z" />
+                                    <Path Fill="#6AA28D" Data="M 113,16 L 117,27 L 113,41 L 109,27 Z" />
+                                    <Path Fill="#6E98BA" Data="M 125,19 L 129,29 L 125,41 L 121,29 Z" />
+                                    <Path Fill="#9380B8" Data="M 137,24 L 141,32 L 137,43 L 133,32 Z" />
+                                    <Path Fill="#B77FAD" Data="M 148,30 L 152,37 L 148,46 L 144,37 Z" />
+                                    <Path Fill="#B39354" Data="M 72,4 L 74,9 L 79,11 L 74,13 L 72,18 L 70,13 L 65,11 L 70,9 Z" />
+                                </Canvas>
+                            </Grid>
+                            <TextBlock x:Name="LabWelcomeText" Text="欢迎回来，准备出发。" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{StaticResource ColorBrushTextPrimary}" />
+                            <TextBlock x:Name="LabWelcomeSub" Text="选择一个世界，让今天的故事继续。" FontSize="13" LineHeight="22" Margin="0,10,0,0" TextWrapping="Wrap" Foreground="{StaticResource ColorBrushTextSecondary}" />
+                            <TextBlock Text="Remilia &amp; Flandre Scarlet" FontFamily="Georgia" FontStyle="Italic" FontSize="11" Foreground="#8B748C" Margin="0,16,0,8" />
+                            <WrapPanel Margin="0,12,0,0">
+                                <local:MyButton x:Name="BtnWelcomeDownload" Text="下载游戏" Height="38" MinWidth="116" Padding="18,0" Margin="0,0,10,10" ColorType="Highlight" />
+                                <local:MyButton x:Name="BtnWelcomePack" Text="安装整合包" Height="38" MinWidth="116" Padding="18,0" Margin="0,0,10,10" />
+                                <local:MyButton x:Name="BtnWelcomeSetup" Text="打开设置" Height="38" MinWidth="104" Padding="18,0" Margin="0,0,0,10" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Grid>
+                </local:MyCard>
+                <local:MyCard x:Name="PanWelcomeGuide" Title="旅程，从这里开始" Margin="0,0,0,18" HasMouseAnimation="False" Visibility="{Binding Visibility, ElementName=PanWelcome}">
+                    <WrapPanel Margin="20,42,10,12">
+                        <Border Width="124" Padding="8,12" Margin="0,0,10,10" CornerRadius="8" Background="Transparent">
+                            <StackPanel>
+                                <TextBlock Text="01  /  选择版本" FontWeight="SemiBold" Foreground="{DynamicResource ColorBrush2}" />
+                                <TextBlock Text="原版或整合包，找到喜欢的玩法。" TextWrapping="Wrap" LineHeight="19" Margin="0,7,0,0" FontSize="12" Foreground="{StaticResource ColorBrushTextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Width="124" Padding="8,12" Margin="0,0,10,10" CornerRadius="8" Background="Transparent">
+                            <StackPanel>
+                                <TextBlock Text="02  /  配置账号" FontWeight="SemiBold" Foreground="{DynamicResource ColorBrush2}" />
+                                <TextBlock Text="在左侧选择需要使用的账号。" TextWrapping="Wrap" LineHeight="19" Margin="0,7,0,0" FontSize="12" Foreground="{StaticResource ColorBrushTextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Width="124" Padding="8,12" Margin="0,0,10,10" CornerRadius="8" Background="Transparent">
+                            <StackPanel>
+                                <TextBlock Text="03  /  开始冒险" FontWeight="SemiBold" Foreground="{StaticResource ColorBrushGold}" />
+                                <TextBlock Text="确认版本，点击左侧启动游戏。" TextWrapping="Wrap" LineHeight="19" Margin="0,7,0,0" FontSize="12" Foreground="{StaticResource ColorBrushTextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+                </local:MyCard>
+                <StackPanel x:Name="PanCustom">
+                </StackPanel>
+                <local:MyCard Margin="0,0,0,15" Title="启动日志" x:Name="PanLog">
+                    <local:MyTextBox x:Name="LabLog" Margin="15,34,15,13" Padding="0,4" IsReadOnly="True" IsUndoEnabled="False"
+                             AcceptsReturn="True" TextWrapping="Wrap" BorderThickness="0" HasBackground="False"
+                             VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" />
+                </local:MyCard>
+            </StackPanel>
+        </local:MyScrollViewer>
+    </Grid>
+</local:MyPageRight>

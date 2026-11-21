@@ -1,4 +1,4 @@
-"""Offline failure-injection tests. Never use GitHub credentials or the network."""
+﻿"""Offline failure-injection tests. Never use GitHub credentials or the network."""
 
 from copy import deepcopy
 import hashlib
@@ -13,7 +13,7 @@ import zipfile
 import release_asset as tool
 
 
-NAME = "PCL-2.99.0.0-fix-win.zip"
+NAME = "Cosy-Craft-Launcher-2.99.0.0-r2-win.zip"
 PAYLOAD = b"new package"
 DIGEST = hashlib.sha256(PAYLOAD).hexdigest()
 
@@ -156,7 +156,7 @@ class PreflightTests(unittest.TestCase):
 
     def make_zip(self, extra=None, executable=b"MZtest"):
         with zipfile.ZipFile(self.package, "w") as archive:
-            archive.writestr("Plain Craft Launcher 2.exe", executable)
+            archive.writestr("Cosy Craft Launcher.exe", executable)
             archive.writestr("LICENCE", "license")
             archive.writestr("README.txt", "instructions")
             if extra:
@@ -193,7 +193,7 @@ class PreflightTests(unittest.TestCase):
 
     def test_missing_required_file_or_empty_executable_is_rejected(self):
         with zipfile.ZipFile(self.package, "w") as archive:
-            archive.writestr("Plain Craft Launcher 2.exe", b"MZtest")
+            archive.writestr("Cosy Craft Launcher.exe", b"MZtest")
         with self.assertRaises(tool.ReleaseError):
             tool.prepare_package(self.package)
         self.make_zip(executable=b"")
@@ -203,7 +203,7 @@ class PreflightTests(unittest.TestCase):
     def test_duplicate_executable_is_rejected(self):
         self.make_zip()
         with self.assertWarns(UserWarning), zipfile.ZipFile(self.package, "a") as archive:
-            archive.writestr("Plain Craft Launcher 2.exe", b"MZduplicate")
+            archive.writestr("Cosy Craft Launcher.exe", b"MZduplicate")
         with self.assertRaises(tool.ReleaseError):
             tool.prepare_package(self.package)
 

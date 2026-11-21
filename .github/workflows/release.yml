@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   release:
-    if: github.repository == 'FLandreyu/MY-PCL' && github.ref == 'refs/heads/main'
+    if: github.repository == 'MVPS680/Cosy-Craft-Launcher' && github.ref == 'refs/heads/main'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,21 +37,21 @@ jobs:
           $sdkVersion = dotnet --version
           $env:MSBuildSDKsPath = Join-Path $env:ProgramFiles "dotnet/sdk/$sdkVersion/Sdks"
           $env:MSBuildEnableWorkloadResolver = 'false'
-          msbuild "Plain Craft Launcher 2/Plain Craft Launcher 2.vbproj" -p:Configuration=Release
+          msbuild "Cosy Craft Launcher/Cosy Craft Launcher.vbproj" -p:Configuration=Release
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Check release tooling
         run: python -m unittest discover -s scripts -p "test_*.py"
       - name: Check desktop controls and runtime
         shell: pwsh
         run: |
-          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_ui.ps1 -Exe "Plain Craft Launcher 2/bin/Plain Craft Launcher 2.exe"
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_ui.ps1 -Exe "Cosy Craft Launcher/bin/Cosy Craft Launcher.exe"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_scarlet_theme.ps1 -Exe "Plain Craft Launcher 2/bin/Plain Craft Launcher 2.exe"
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_scarlet_theme.ps1 -Exe "Cosy Craft Launcher/bin/Cosy Craft Launcher.exe"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Package and preflight
         shell: pwsh
         run: |
-          python scripts/package_release.py --build-dir "Plain Craft Launcher 2/bin" --output-dir dist
+          python scripts/package_release.py --build-dir "Cosy Craft Launcher/bin" --output-dir dist
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python scripts/publish_release.py --directory dist
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

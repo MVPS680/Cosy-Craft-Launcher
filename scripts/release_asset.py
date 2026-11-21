@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Preflight a release ZIP; --execute uploads and swaps one asset, keeping a backup.
 
 Default mode is offline. Release text, tags and unrelated assets are not changed.
@@ -18,10 +18,10 @@ from urllib import error, parse, request
 import uuid
 import zipfile
 
-DEFAULT_REPO = "FLandreyu/MY-PCL"
-DEFAULT_RELEASE = 418295153
-DEFAULT_TAG = "v2.99.0.0-fix"
-DEFAULT_ZIP = Path(__file__).resolve().parents[2] / "dist/PCL-2.99.0.0-fix-win.zip"
+DEFAULT_REPO = "MVPS680/Cosy-Craft-Launcher"
+DEFAULT_RELEASE = 1  # 占位值；--execute 时请显式传入目标 Release ID
+DEFAULT_TAG = "v2.99.0.0-r2"
+DEFAULT_ZIP = Path(__file__).resolve().parents[1] / "dist/Cosy-Craft-Launcher-2.99.0.0-r2-win.zip"
 
 
 class ReleaseError(Exception):
@@ -33,7 +33,7 @@ def prepare_package(path):
     payload = path.read_bytes()
     with zipfile.ZipFile(io.BytesIO(payload)) as archive:
         names = archive.namelist()
-        required = {"Plain Craft Launcher 2.exe", "LICENCE", "README.txt"}
+        required = {"Cosy Craft Launcher.exe", "LICENCE", "README.txt"}
         if len(names) != len(set(names)) or not required.issubset(names):
             raise ReleaseError("ZIP must contain one launcher EXE, LICENCE and README.txt at its root.")
         for name in names:
@@ -42,7 +42,7 @@ def prepare_package(path):
                 raise ReleaseError("ZIP contains an unsafe entry path.")
         if archive.testzip() is not None:
             raise ReleaseError("ZIP failed its CRC integrity check.")
-        with archive.open("Plain Craft Launcher 2.exe") as executable:
+        with archive.open("Cosy Craft Launcher.exe") as executable:
             if executable.read(2) != b"MZ":
                 raise ReleaseError("Launcher EXE is not a Windows executable.")
         if any(archive.getinfo(name).file_size == 0 for name in required):
@@ -89,7 +89,7 @@ class GitHub:
 
     def open(self, method, url, data=None, accept="application/vnd.github+json", content_type=None):
         req = request.Request(url, data=data, method=method, headers={
-            "Accept": accept, "User-Agent": "MY-PCL-release-tool",
+            "Accept": accept, "User-Agent": "Cosy-Craft-Launcher-release-tool",
             "X-GitHub-Api-Version": "2022-11-28",
         })
         # Do not forward authentication to the signed CDN download URL.
